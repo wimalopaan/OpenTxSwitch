@@ -1,6 +1,6 @@
 gPulseSw = {0, 0, 0, 0};
 
---- defined names and states
+--- define menu
 
 local menu = {
    title = "PulseSwitch",
