@@ -1,4 +1,4 @@
-gPulseSw0 = 0; -- if multiple modules are used, change name
+gPulseSw = {0, 0, 0, 0};
 
 --- defined names and states
 
@@ -55,7 +55,9 @@ local sstate = {}
 
 sstate.states = {idle = 0, start = 1, pulse = 2, deadWait = 3};
 sstate.state  = sstate.states.idle;
-sstate.active = {pulses = 0, pulseCount = 0, nextToggle = 0, startTime = getTime(), state = 0, on = false};
+sstate.active = {item= nil,
+		 pulseCount = 0, nextToggle = 0, startTime = getTime(),
+		 on = false};
 sstate.switches = nil;
 
 -------
@@ -101,52 +103,49 @@ local function background()
       sstate.state = sstate.states.idle;
    elseif (sstate.state == sstate.states.idle) then
       if (queue:size() > 0) then
-	 local item = queue:pop();
-	 sstate.active.pulses = item[1];
-	 sstate.active.state = item[2];
+	 sstate.active.item = queue:pop();
 	 sstate.state = sstate.states.start;
       end
-   elseif (sstate.state == sstate.states.start) and (sstate.active.pulses > 0) then
+   elseif (sstate.state == sstate.states.start) then
       sstate.active.startTime = getTime();
       sstate.active.pulseCount = 1;
-      sstate.active.nextToggle = getTime() + ((sstate.active.pulses == 1) and parameter.pulse.long or parameter.pulse.duration);
-      gPulseSw0 = parameter.pulseValue[sstate.active.state];
-      
+      sstate.active.nextToggle = getTime() + ((sstate.active.item.count == 1) and parameter.pulse.long or parameter.pulse.duration);
+      gPulseSw[sstate.active.item.module] = parameter.pulseValue[sstate.active.item.state];      
       sstate.state = sstate.states.pulse;
       sstate.active.on = true;
    elseif (sstate.state == sstate.states.pulse) then
       if (getTime() > sstate.active.nextToggle) then
 	 if (sstate.active.on) then
-	    gPulseSw0 = parameter.pulseValue[parameter.neutral];
+	    gPulseSw[sstate.active.item.module] = parameter.pulseValue[parameter.neutral];
 	    sstate.active.on = false;
 	    sstate.active.nextToggle = sstate.active.nextToggle + parameter.pulse.pause;
-	    if (sstate.active.pulses == sstate.active.pulseCount) then
+	    if (sstate.active.item.count == sstate.active.pulseCount) then
 	       sstate.state = sstate.states.deadWait;
 	       parameter.dead.lastAction = getTime();
 	       playHaptic(10, 100);
 	    end
 	 else 
 	    sstate.active.pulseCount = sstate.active.pulseCount + 1;
-	    gPulseSw0 = parameter.pulseValue[sstate.active.state];
+	    gPulseSw[sstate.active.item.module] = parameter.pulseValue[sstate.active.item.state];
 	    sstate.active.on = true;
-	    sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.pulses > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
+	    sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.item.count > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
 	 end
       end
    end
 end
 
-local function toggle(count, state)
-   local e = {count, state};
+local function toggle(count, state, module)
+   local e = {count = count, state = state, module = module};
    queue:push(e);
 end
 
 local function select(item)
    if not (item.state == menu.state.activeCol) then
       if not (item.state == item.data.offState) then
-	 toggle(item.data.count, item.state);
+	 toggle(item.data.count, item.state, item.data.module);
       end
       if not (menu.state.activeCol == item.data.offState) then
-	 toggle(item.data.count, menu.state.activeCol);
+	 toggle(item.data.count, menu.state.activeCol, item.data.module);
       end
       item.state = menu.state.activeCol;
    end

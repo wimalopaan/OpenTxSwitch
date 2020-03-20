@@ -1,9 +1,9 @@
 local input = {}
 
-local output = { "psw0" }
+local output = { "psmod4" }
 
 local function run()
-   return gPulseSw0;
+   return gPulseSw[4];
 end
 
 return {output=output, input=input, run=run}
