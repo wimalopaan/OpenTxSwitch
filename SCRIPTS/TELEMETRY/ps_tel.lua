@@ -209,16 +209,53 @@ end
 local function processEvents(menu, event)
    local p = menu.state.activePage;
    if event == EVT_VIRTUAL_DEC then
-      if (menu.state.activeRow < #p.items) then
-	 menu.state.activeRow = menu.state.activeRow + 1;
+      if (EVT_VIRTUAL_DEC == EVT_VIRTUAL_PREV) then
+	 if (menu.state.activeCol > 1) then
+	    menu.state.activeCol = menu.state.activeCol - 1;
+	 else
+	    if (menu.state.activeRow > 1) then
+	       menu.state.activeRow = menu.state.activeRow - 1;
+	       menu.state.activeCol = #p.items[menu.state.activeRow].states;
+	    else
+	       if p.prev then
+		  menu.state.activePage = p.prev;
+		  menu.state.activeRow = #p.items;
+		  menu.state.activeCol = #p.items[#p.items].states;
+	       end
+	    end
+	 end
+      else
+	 if (menu.state.activeRow < #p.items) then
+	    menu.state.activeRow = menu.state.activeRow + 1;
+	 end
       end
    elseif event == EVT_VIRTUAL_INC then
-      if menu.state.activeRow > 1 then
-	 menu.state.activeRow = menu.state.activeRow - 1;
+      if (EVT_VIRTUAL_INC == EVT_VIRTUAL_NEXT) then
+	 if (menu.state.activeRow < 1) then
+	    menu.state.activeRow = 1;
+	 end
+	 if (menu.state.activeCol < #p.items[menu.state.activeRow].states) then
+	    menu.state.activeCol = menu.state.activeCol + 1;
+	 else
+	    if (menu.state.activeRow < #p.items) then
+	       menu.state.activeRow = menu.state.activeRow + 1;
+	       menu.state.activeCol = 1;
+	    else
+	       if p.next then
+		  menu.state.activePage = p.next;
+		  menu.state.activeRow = 1;
+		  menu.state.activeCol = 1;
+	       end
+	    end
+	 end
+      else
+	 if menu.state.activeRow > 1 then
+	    menu.state.activeRow = menu.state.activeRow - 1;
+	 end
       end
-   elseif event == 100 or event == EVT_PAGE_FIRST then
+   elseif event == 100 or event == EVT_VIRTUAL_NEXT then
       menu.state.activeCol = menu.state.activeCol + 1;
-   elseif event == 101 or event == EVT_MENU_FIRST then
+   elseif event == 101 or event == EVT_VIRTUAL_PREV then
       if menu.state.activeCol > 1 then
 	 menu.state.activeCol = menu.state.activeCol - 1;
       end
@@ -231,6 +268,7 @@ local function processEvents(menu, event)
 	 menu.state.activeRow = 0;
 	 menu.state.activeCol = 1;
    end
+   
    if menu.state.activeRow > 0 then
       if p.items[menu.state.activeRow].states then
 	 if menu.state.activeCol > #p.items[menu.state.activeRow].states then
@@ -238,11 +276,11 @@ local function processEvents(menu, event)
 	 end
       end
    else
-      if event == 100 or event == EVT_PAGE_FIRST then
+      if event == 100 or event == EVT_VIRTUAL_NEXT then
 	 if p.next then
 	    menu.state.activePage = p.next;
 	 end
-      elseif event == 101 or event == EVT_MENU_FIRST then
+      elseif event == 101 or event == EVT_VIRTUAL_PREVT then
 	 if p.prev then
 	    menu.state.activePage = p.prev;
 	 end
@@ -253,6 +291,7 @@ end
 local function run(event)
    processEvents(menu, event);
    displayMenu(menu, event);
+--   killEvents(event);
 end
 
 return {run=run, init=init, background=background}
