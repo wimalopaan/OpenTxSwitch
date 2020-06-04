@@ -273,7 +273,7 @@ Display flight mode
 local function drawFM (x,y, font)
 	local fmno, fmname = getFlightMode()
 	if fmname == "" then
-		fmname = "FahrZ".. fmno
+		fmname = "FahrZustand ".. fmno
 	end
 	lcd.drawText (x, y, fmname, font + colorFlags)
 end
@@ -441,7 +441,7 @@ local function refresh(wgt)
 		drawChans (wgt.zone.x + 70, wgt.zone.y + 105)
 		drawFM (wgt.zone.x + 140, wgt.zone.y + 105, MIDSIZE)
 		drawEssentials (wgt.zone.x + 140, wgt.zone.y + 34, 0)
-		drawTimers (wgt.zone.x + 288, wgt.zone.y + 107)
+--		drawTimers (wgt.zone.x + 288, wgt.zone.y + 107)
 		drawLS (wgt.zone.x+290, wgt.zone.y+39)
 		drawAlerts (wgt.zone.x + wgt.zone.w - 2, wgt.zone.y, MIDSIZE)
 
@@ -455,7 +455,7 @@ local function refresh(wgt)
 			drawSticks (wgt.zone.x + 10, wgt.zone.y + 80)
 			drawChans (wgt.zone.x + 75, wgt.zone.y + 80)
 		--]]
-		drawTimers (wgt.zone.x + 10, wgt.zone.y + 87)
+--		drawTimers (wgt.zone.x + 10, wgt.zone.y + 87)
 		end
 
 	else

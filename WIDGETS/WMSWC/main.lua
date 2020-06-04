@@ -79,6 +79,11 @@ local function encodeDigital(address, number, state)
   return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
 end
 
+local function sendCommand(parameter, value)
+end
+
+local function sendResetAll() 
+
 local function init()
   menu.state.activeRow = 0;
   menu.state.activeCol = 0;
