@@ -18,10 +18,8 @@
 
 --- define menu
 
-local mode = 1; -- 0: tiptip; 1: digital-idempotential
-
 local menu = {
-  title = "WM Multikanal 0.1",
+  title = "WM Multikanal Config 0.1",
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -30,80 +28,47 @@ local menu = {
   pages = {
     {
       items = {
-        {name = "Fun A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
-        {name = "Fun B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
-        {name = "Fun C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
-        {name = "Fun D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
-        {name = "Fun E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
-        {name = "Fun F", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
-        {name = "Fun G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
-        {name = "Fun H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
+        {name = "Fun A1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
+        {name = "Fun B1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
+        {name = "Fun C1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
+        {name = "Fun D1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
+        {name = "Fun E1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
+        {name = "Fun F1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
+        {name = "Fun G1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
+        {name = "Fun H1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
       }
     },
     {
       items = {
-        {name = "Nuf A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
-        {name = "Nuf B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 2}},
-        {name = "Nuf C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 2}},
-        {name = "Nuf D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 2}},
-        {name = "Nuf E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 2}},
-        {name = "Nuf F", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 2}},
-        {name = "Nuf G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 2}},
-        {name = "Nuf H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 2}},
+        {name = "Fun A2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
+        {name = "Fun B2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 2}},
+        {name = "Fun C2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 2}},
+        {name = "Fun D2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 2}},
+        {name = "Fun E2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 2}},
+        {name = "Fun F2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 2}},
+        {name = "Fun G2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 2}},
+        {name = "Fun H2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 2}},
       }
     },
     {
       items = {
-        {name = "Ufn A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
-        {name = "Ufn B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 3}},
-        {name = "Ufn C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 3}},
-        {name = "Ufn D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 3}},
-        {name = "Ufn E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 3}},
-        {name = "Ufn F", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 3}},
-        {name = "Ufn G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 3}},
-        {name = "Ufn H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 3}},
+        {name = "Fun A3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
+        {name = "Fun B3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 3}},
+        {name = "Fun C3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 3}},
+        {name = "Fun D3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 3}},
+        {name = "Fun E3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 3}},
+        {name = "Fun F3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 3}},
+        {name = "Fun G3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 3}},
+        {name = "Fun H3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 3}},
       }
     }
   }
 }   
 
----- mostly valid values
-
-local parameter = {
-  pulse = {duration = 30, pause = 30, long = 100}; -- 300ms/750ms
-  dead = {duration = 100, lastAction = getTime()}; -- 3s before next action 
-  pulseValue = {-1024, 0, 1024};
-  neutral = 2; -- index
-}
-
 ----- nothing to setup below this line
-
-local sstate = {}
-
-sstate.states = {idle = 0, start = 1, pulse = 2, deadWait = 3};
-sstate.state  = sstate.states.idle;
-sstate.active = {item= nil,
-  pulseCount = 0, nextToggle = 0, startTime = getTime(),
-  on = false};
-sstate.switches = nil;
 
 -------
 
-local queue = {first = 0, last = -1};
-
-function queue:push (item)
-  self.last = self.last + 1;
-  self[self.last] = item;
-end
-function queue:pop()
-  local item = self[self.first];
-  self[self.first] = nil;
-  self.first = self.first + 1;
-  return item;
-end
-function queue:size()
-  return self.last - self.first + 1;
-end
 
 local function sendValue(module, value)
   print("sendValue m: ", module, " v: ", value);
@@ -132,72 +97,19 @@ local function init()
   for i,p in ipairs(menu.pages) do
     for k, item in ipairs(p) do
       item.cb = select;
-      sstate.switches[#sstate.switches + 1] = item;
+--      sstate.switches[#sstate.switches + 1] = item;
     end
   end
 end
 
 local function background()
-  if (mode == 0) then
-    if (sstate.state == sstate.states.deadWait) and (getTime() > (parameter.dead.lastAction + parameter.dead.duration)) then
-      sstate.state = sstate.states.idle;
-    elseif (sstate.state == sstate.states.idle) then
-      if (queue:size() > 0) then
-        sstate.active.item = queue:pop();
-        sstate.state = sstate.states.start;
-      end
-    elseif (sstate.state == sstate.states.start) then
-      sstate.active.startTime = getTime();
-      sstate.active.pulseCount = 1;
-      sstate.active.nextToggle = getTime() + ((sstate.active.item.count == 1) and parameter.pulse.long or parameter.pulse.duration);
-      sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);      
-      sstate.state = sstate.states.pulse;
-      sstate.active.on = true;
-    elseif (sstate.state == sstate.states.pulse) then
-      if (getTime() > sstate.active.nextToggle) then
-        if (sstate.active.on) then
-          sendValue(sstate.active.item.module, parameter.pulseValue[parameter.neutral]);
-          sstate.active.on = false;
-          sstate.active.nextToggle = sstate.active.nextToggle + parameter.pulse.pause;
-          if (sstate.active.item.count == sstate.active.pulseCount) then
-            sstate.state = sstate.states.deadWait;
-            parameter.dead.lastAction = getTime();
-            playHaptic(10, 100);
-          end
-        else 
-          sstate.active.pulseCount = sstate.active.pulseCount + 1;
-          sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);
-          sstate.active.on = true;
-          sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.item.count > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
-        end
-      end
-    end
-  elseif (mode == 1) then
---    print("bg");
-  end 
 end
 
-local function toggle(count, state, module)
-  local e = {count = count, state = state, module = module};
-  queue:push(e);
-end
 
 local function select(item)
-  if (mode == 0) then
-    if not (item.state == menu.state.activeCol) then
-      if not (item.state == item.data.offState) then
-        toggle(item.data.count, item.state, item.data.module);
-      end
-      if not (menu.state.activeCol == item.data.offState) then
-        toggle(item.data.count, menu.state.activeCol, item.data.module);
-      end
-      item.state = menu.state.activeCol;
-    end
-  elseif (mode == 1) then
     print("sel: ", item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
     sendValue(1, encodeDigital(item.data.module, item.data.count, item.state)); 
-  end
 end
 
 local function displayMenu(menu, event, pie)  
@@ -393,4 +305,4 @@ function refresh(pie)
   run(nil, pie);
 end
 
-return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh}
+return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh}
