@@ -21,7 +21,8 @@ local input = {}
 local output = { "psmod1" }
 
 local function run()
-   return gPulseSw[1];
+   return model.getGlobalVariable(5, 0);
+--   return model.getGlobalVariable(5, getFlightMode());
 end
 
 return {output=output, input=input, run=run}

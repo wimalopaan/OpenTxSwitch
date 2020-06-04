@@ -1,4 +1,4 @@
-local WGTNAME = "showal" .. "0.9"  -- max 9 characters
+local WGTNAME = "all" .. "0.9.2"  -- max 9 characters
 
 --[[
 HISTORY
@@ -273,7 +273,7 @@ Display flight mode
 local function drawFM (x,y, font)
 	local fmno, fmname = getFlightMode()
 	if fmname == "" then
-		fmname = "FM".. fmno
+		fmname = "FahrZ".. fmno
 	end
 	lcd.drawText (x, y, fmname, font + colorFlags)
 end
