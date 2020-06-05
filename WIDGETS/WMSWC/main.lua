@@ -28,38 +28,38 @@ local menu = {
   pages = {
     {
       items = {
-        {name = "Fun A1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
-        {name = "Fun B1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
-        {name = "Fun C1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
-        {name = "Fun D1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
-        {name = "Fun E1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
-        {name = "Fun F1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
-        {name = "Fun G1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
-        {name = "Fun H1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
+        {name = "Fun A1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
+        {name = "Fun B1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
+        {name = "Fun C1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
+        {name = "Fun D1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
+        {name = "Fun E1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
+        {name = "Fun F1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
+        {name = "Fun G1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
+        {name = "Fun H1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
       }
     },
     {
       items = {
-        {name = "Fun A2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
-        {name = "Fun B2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 2}},
-        {name = "Fun C2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 2}},
-        {name = "Fun D2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 2}},
-        {name = "Fun E2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 2}},
-        {name = "Fun F2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 2}},
-        {name = "Fun G2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 2}},
-        {name = "Fun H2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 2}},
+        {name = "Fun A2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
+        {name = "Fun B2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 2}},
+        {name = "Fun C2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 2}},
+        {name = "Fun D2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 2}},
+        {name = "Fun E2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 2}},
+        {name = "Fun F2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 2}},
+        {name = "Fun G2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 2}},
+        {name = "Fun H2", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 2}},
       }
     },
     {
       items = {
-        {name = "Fun A3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
-        {name = "Fun B3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 3}},
-        {name = "Fun C3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 3}},
-        {name = "Fun D3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 3}},
-        {name = "Fun E3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 3}},
-        {name = "Fun F3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 3}},
-        {name = "Fun G3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 3}},
-        {name = "Fun H3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 3}},
+        {name = "Fun A3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
+        {name = "Fun B3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 3}},
+        {name = "Fun C3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 3}},
+        {name = "Fun D3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 3}},
+        {name = "Fun E3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 3}},
+        {name = "Fun F3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 3}},
+        {name = "Fun G3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 3}},
+        {name = "Fun H3", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d"}, state = 0, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 3}},
       }
     }
   }
@@ -68,21 +68,49 @@ local menu = {
 ----- nothing to setup below this line
 
 -------
+local lastSelectedItem = nil;
+local lastSelectedCol = 0;
+local lastSelectedTime = 0;
 
-
-local function sendValue(module, value)
-  print("sendValue m: ", module, " v: ", value);
-  model.setGlobalVariable(module + 4, getFlightMode(), value);
+local function sendValue(gvar, value)
+  print("sendValue m: ", gvar, " v: ", value);
+  model.setGlobalVariable(gvar + 4, getFlightMode(), value);
 end
 
-local function encodeDigital(address, number, state)
+local function encodeFunction(address, number, state)
   return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
 end
 
-local function sendCommand(parameter, value)
+local function encodeParameter(parameter, value)
+  return (512 + (parameter - 1) * 32 + value + 0.5) * 2 - 1024;
 end
 
 local function sendResetAll() 
+  print("reset");
+  sendValue(1, encodeParameter(16, 32)); -- broadcast   
+end 
+
+local function scaleValue(v)
+  local s = ((v + 1024) * 32) / 2048;
+  if (s > 31) then
+    s = 31;
+  end 
+  if (s < 0) then
+    s = 0;
+  end
+  return s;
+end
+
+local followHasRun = false;
+
+local function pushValue()
+  local dt = getTime() - lastSelectedTime;
+  if (followHasRun and (dt > 10) and lastSelectedItem and (lastSelectedCol > 0)) then
+    local v = scaleValue(getValue("s1"));
+    print("push: ", v);
+    sendValue(1, encodeParameter(lastSelectedCol, v));
+  end
+end
 
 local function init()
   menu.state.activeRow = 0;
@@ -110,15 +138,41 @@ end
 local function background()
 end
 
+local function deselectAll() 
+  for prow, p in ipairs(menu.pages) do
+    for row, item in ipairs(p.items) do
+      item.state = 0;
+    end
+  end
+  lastSelectedItem = nil;
+  lastSelectedCol = 0;
+end
 
 local function select(item)
-    print("sel: ", item.name, item.state, menu.state.activeCol);
-    item.state = menu.state.activeCol;
-    sendValue(1, encodeDigital(item.data.module, item.data.count, item.state)); 
+  print("sel: ", item.name, item.state, menu.state.activeCol);
+  deselectAll();
+  lastSelectedItem = item;
+  lastSelectedCol = menu.state.activeCol;
+  item.state = menu.state.activeCol;
+  sendResetAll();
+  lastSelectedTime = getTime();
+  followHasRun = false;
+end
+
+local function selectFollow()
+  local dt = getTime() - lastSelectedTime;
+  if (lastSelectedItem and (dt > 10) and not followHasRun) then
+    followHasRun = true;
+    lastSelectedTime = getTime();
+    sendValue(1, encodeFunction(lastSelectedItem.data.module, lastSelectedItem.data.count, 2)); 
+    print("selFollow");
+  end
 end
 
 local function displayMenu(menu, event, pie)  
+  lcd.setColor(TEXT_COLOR, RED);
   lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
+  lcd.setColor(TEXT_COLOR, GREY_DEFAULT or 0);
   -- lcd.clear()
   local n = 0;
   for i,pa in ipairs(menu.pages) do
@@ -138,18 +192,15 @@ local function displayMenu(menu, event, pie)
       local fw = pie.zone.w / (#opt.states + 1);
       for col, st in ipairs(opt.states) do
         x = x + fw;
---        attr = (col == opt.state) and INVERS or 0
-        if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
-          lcd.drawText(x, y, st, BLINK + INVERS + SMLSIZE);
---          attr = BLINK;
+        if (col == opt.state) then
+          lcd.drawText(x, y, st, INVERS + SMLSIZE);
         else
-          if (col == opt.state) then
-            lcd.drawText(x, y, st, INVERS + SMLSIZE);
+          if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
+            lcd.drawText(x, y, st, BLINK + INVERS + SMLSIZE);
           else
             lcd.drawText(x, y, st, SMLSIZE);
           end
         end
---        lcd.drawText(x, y, st, attr);
       end
     else
       fw = pie.zone.w / 2;
@@ -284,7 +335,8 @@ local function run(event, pie)
   local e = readButtons(pie);
   processEvents(menu, e);
   displayMenu(menu, event, pie);
---   killEvents(event);
+  selectFollow();
+  pushValue();
 end
 
 local options = {
@@ -305,7 +357,15 @@ local function update(pie, options)
   pie.options = options;
 end
 
+local lastCall = 0;
+
 function refresh(pie)
+  local t = getTime();
+  local dt = t - lastCall;
+  lastCall = t;
+  if (dt > 50) then
+    deselectAll();
+  end
   background();
   run(nil, pie);
 end

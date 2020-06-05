@@ -105,12 +105,12 @@ function queue:size()
   return self.last - self.first + 1;
 end
 
-local function sendValue(module, value)
-  print("sendValue m: ", module, " v: ", value);
-  model.setGlobalVariable(module + 4, getFlightMode(), value);
+local function sendValue(gvar, value)
+  print("sendValue m: ", gvar, " v: ", value);
+  model.setGlobalVariable(gvar + 4, getFlightMode(), value);
 end
 
-local function encodeDigital(address, number, state)
+local function encodeFunction(address, number, state)
   return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
 end
 
@@ -183,6 +183,9 @@ local function toggle(count, state, module)
 end
 
 local function select(item)
+  if (not item) then
+    return;
+  end
   if (mode == 0) then
     if not (item.state == menu.state.activeCol) then
       if not (item.state == item.data.offState) then
@@ -196,7 +199,7 @@ local function select(item)
   elseif (mode == 1) then
     print("sel: ", item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
-    sendValue(1, encodeDigital(item.data.module, item.data.count, item.state)); 
+    sendValue(1, encodeFunction(item.data.module, item.data.count, item.state)); 
   end
 end
 
@@ -296,9 +299,11 @@ local function processEvents(menu, event, pie)
       menu.state.activeCol = menu.state.activeCol - 1;
     end
   elseif event == EVT_VIRTUAL_ENTER then
-    select(p.items[menu.state.activeRow]);
-    if p.items[menu.state.activeRow].cb then
-      p.items[menu.state.activeRow].cb(menu);
+    if (menu.state.activeRow > 0) then
+      select(p.items[menu.state.activeRow]);
+      if p.items[menu.state.activeRow].cb then
+        p.items[menu.state.activeRow].cb(menu);
+      end
     end
   elseif event == EVT_VIRTUAL_EXIT then
     menu.state.activeRow = 0;
