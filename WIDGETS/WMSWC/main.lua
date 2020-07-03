@@ -19,7 +19,7 @@
 --- define menu
 
 local menu = {
-  title = "WM Multikanal Config 0.1",
+  title = "WM Multikanal Config 0.2",
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -164,7 +164,7 @@ local function selectFollow()
   if (lastSelectedItem and (dt > 10) and not followHasRun) then
     followHasRun = true;
     lastSelectedTime = getTime();
-    sendValue(1, encodeFunction(lastSelectedItem.data.module, lastSelectedItem.data.count, 2)); 
+    sendValue(1, encodeFunction(lastSelectedItem.data.module, lastSelectedItem.data.count, 2)); -- select on state 
     print("selFollow");
   end
 end

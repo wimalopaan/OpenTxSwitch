@@ -16,12 +16,20 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---- define menu
+-- define menu
+
+-- Version 0.2
+--- Customization:
+---- only modify menu: name, states, switch (if needed) 
 
 local mode = 1; -- 0: tiptip; 1: digital-idempotential
 
 local menu = {
-  title = "WM Multikanal 0.1",
+  title = "WM MultiSwitch 0.2",
+
+  scrollUpDn = "ls", -- direct navigating
+  scrollLR = "rs",
+
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -30,8 +38,8 @@ local menu = {
   pages = {
     {
       items = {
-        {name = "Fun A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
-        {name = "Fun B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
+        {name = "Fun A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = "sa", count = 1, offState = 1, module = 1}},
+        {name = "Fun B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = "sb", count = 2, offState = 1, module = 1}},
         {name = "Fun C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
         {name = "Fun D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
         {name = "Fun E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
@@ -87,6 +95,11 @@ sstate.active = {item= nil,
   on = false};
 sstate.switches = nil;
 
+local shortCuts = {};
+
+local lsID = 0;
+local rsID = 0;
+
 -------
 
 local queue = {first = 0, last = -1};
@@ -106,7 +119,7 @@ function queue:size()
 end
 
 local function sendValue(gvar, value)
-  print("sendValue m: ", gvar, " v: ", value);
+--  print("sendValue m: ", gvar, " v: ", value);
   model.setGlobalVariable(gvar + 4, getFlightMode(), value);
 end
 
@@ -114,7 +127,30 @@ local function encodeFunction(address, number, state)
   return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
 end
 
+local function findInputId(name) 
+  for i=0,31 do
+    local inp = getFieldInfo("input" .. i);
+    if (inp) then
+      print(i, inp.desc);
+      if (inp.name == name) then
+        return i;
+      end
+    end
+  end
+  return 0;
+end
+
 local function init()
+  local lsFI = getFieldInfo(menu.scrollUpDn);
+  if (lsFI) then
+    lsID = lsFI.id;
+  end
+
+  local rsFI = getFieldInfo(menu.scrollLR);
+  if (rsFI) then
+    rsID = rsFI.id;
+  end
+
   menu.state.activeRow = 0;
   menu.state.activeCol = 0;
   menu.state.activePage = menu.pages[1];
@@ -129,13 +165,45 @@ local function init()
     menu.pages[p].prev = menu.pages[(( p + #menu.pages - 2) % #menu.pages) + 1]; 
   end
 
+--  for i,p in ipairs(menu.pages) do
+--    for k, item in ipairs(p) do
+--      item.cb = select;
+--      sstate.switches[#sstate.switches + 1] = item;
+--    end
+--  end
+
   for i,p in ipairs(menu.pages) do
-    for k, item in ipairs(p) do
-      item.cb = select;
-      sstate.switches[#sstate.switches + 1] = item;
+    for k, item in ipairs(p.items) do
+      if (item.data.switch) then
+        shortCuts[#shortCuts + 1] = {item = item, switch = item.data.switch};
+        item.name = item.name .. "/" .. item.data.switch;
+      end
     end
   end
 end
+
+local function swState(s) 
+  local v = getValue(s);
+  if (v < 0) then
+    return 2;
+  elseif (v > 0) then
+    return 3;
+  else 
+    return 1;
+  end
+end
+
+local function readShortCuts() 
+  for i,s in ipairs(shortCuts) do
+    local ns = swState(s.switch);
+    if not (s.item.state == ns) then
+      print(ns);
+      s.item.state = ns;
+      sendValue(1, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
+    end
+  end
+end
+
 
 local function background()
   if (mode == 0) then
@@ -173,7 +241,7 @@ local function background()
       end
     end
   elseif (mode == 1) then
---    print("bg");
+    readShortCuts();
   end 
 end
 
@@ -197,7 +265,7 @@ local function select(item)
       item.state = menu.state.activeCol;
     end
   elseif (mode == 1) then
-    print("sel: ", item.name, item.state, menu.state.activeCol);
+--    print("sel: ", item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
     sendValue(1, encodeFunction(item.data.module, item.data.count, item.state)); 
   end
@@ -337,7 +405,27 @@ local buttons = {
   lasts = 0
 }
 
-local function readButtons(pie)
+local function inputToMenuLine(name) 
+  local p = menu.state.activePage;
+  local n = #p.items;
+  local v = getValue(name) + 1024;
+  local l = n - math.floor((v * n) / 2049);
+  return l;
+end
+
+local function inputToMenuCol(name) 
+  local p = menu.state.activePage;
+  if (menu.state.activeRow > 0) then
+    local n = #p.items[menu.state.activeRow].states;
+    local v = getValue(name) + 1024;
+    local l = math.floor((v * n) / 2049) + 1;
+    return l;
+  end
+  return 0;
+end
+
+
+local function readButtons(pie)  
   local e = 0;
   local nv = getValue(pie.options.Next);
   if (nv > buttons.lastn) then
@@ -347,14 +435,31 @@ local function readButtons(pie)
   if (pv > buttons.lastp) then
     e = EVT_VIRTUAL_DEC;
   end
-  local lv = getValue(pie.options.Left);
-  if (lv > buttons.lastl) then
-    e = EVT_VIRTUAL_PREV;
+  local lv = 0;
+  if (lsID > 0) then
+    lv = inputToMenuLine(lsID);
+    if not (lv == buttons.lastl) then
+      menu.state.activeRow = lv;
+    end
+  else
+--    local lv = getValue(pie.options.Left);
+--    if (lv > buttons.lastl) then
+--      e = EVT_VIRTUAL_PREV;
+--    end
   end
-  local rv = getValue(pie.options.Right);
-  if (rv > buttons.lastr) then
-    e =  EVT_VIRTUAL_NEXT;
+  local rv= 0;
+  if (rsID > 0) then
+    rv = inputToMenuCol(rsID);
+    if not (rv == buttons.lastr) then
+      menu.state.activeCol = rv;
+    end
+  else
+--    local rv = getValue(pie.options.Right);
+--    if (rv > buttons.lastr) then
+--      e =  EVT_VIRTUAL_NEXT;
+--    end
   end
+
   local sv = getValue(pie.options.Select);
   if (sv > buttons.lasts) then
     e =  EVT_VIRTUAL_ENTER;
@@ -365,6 +470,7 @@ local function readButtons(pie)
   buttons.lastr = rv;
   buttons.lasts = sv;
 
+  print(lv);
   return e;
 end 
 
@@ -376,15 +482,13 @@ local function run(event, pie)
 end
 
 local options = {
-  { "Next",     SOURCE, 8 },
-  { "Previous", SOURCE, 9 },
-  { "Select",   SOURCE, 10 },
-  { "Left",     SOURCE, 11 },
-  { "Right",    SOURCE, 12 }
+  { "Next",     SOURCE, 8},
+  { "Previous", SOURCE, 9},
+  { "Select",   SOURCE, 10}
 }
 
 local function create(zone, options)
-  init();
+  init(options);
   local pie = { zone=zone, options=options, counter=0 };
   return pie;
 end
