@@ -25,7 +25,7 @@
 local mode = 1; -- 0: tiptip; 1: digital-idempotential
 
 local menu = {
-  title = "WM MultiSwitch 0.2",
+  title = "WM MultiSwitch 0.3",
 
   scrollUpDn = "ls", -- direct navigating
   scrollLR = "rs",
@@ -99,7 +99,6 @@ function queue:size()
 end
 
 local function sendValue(gvar, value)
---  print("sendValue m: ", gvar, " v: ", value);
   model.setGlobalVariable(gvar + 4, getFlightMode(), value);
 end
 
