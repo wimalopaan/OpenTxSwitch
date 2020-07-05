@@ -1,7 +1,7 @@
 local name = "Default";
 
 local menu = {
-  title = "WM MultiSwitch 0.2",
+  title = "WM MultiSwitch 0.4",
 
   scrollUpDn = "ls", -- direct navigating
   scrollLR = "rs",

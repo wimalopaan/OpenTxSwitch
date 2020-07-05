@@ -27,7 +27,7 @@ local mode = 1; -- 0: tiptip; 1: digital-idempotential
 local menu = {
   title = "WM MultiSwitch 0.3",
 
-  scrollUpDn = "ls", -- direct navigating
+  scrollUpDn = "ls", -- speedDials: direct navigating
   scrollLR = "rs",
 
   state = {
@@ -35,6 +35,7 @@ local menu = {
     activeCol = 1,
     activePage = nil
   },
+  
   pages = {
     {
       items = {
@@ -52,8 +53,8 @@ local menu = {
 }   
 
 local defaultFilename = "/MODELS/swstd.lua";
-local cfgName = nil;
 local config = nil;
+local lib = nil;
 
 ---- mostly valid values
 
@@ -75,11 +76,6 @@ sstate.active = {item= nil,
   on = false};
 sstate.switches = nil;
 
-local shortCuts = {};
-
-local lsID = 0;
-local rsID = 0;
-
 -------
 
 local queue = {first = 0, last = -1};
@@ -99,117 +95,18 @@ function queue:size()
 end
 
 local function sendValue(gvar, value)
+--  print("sendV: ", value);
   model.setGlobalVariable(gvar + 4, getFlightMode(), value);
 end
 
-local function encodeFunction(address, number, state)
-  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
-end
 
-local function findInputId(name) 
-  for i=0,31 do
-    local inp = getFieldInfo("input" .. i);
-    if (inp) then
-      print(i, inp.desc);
-      if (inp.name == name) then
-        return i;
-      end
-    end
-  end
-  return 0;
-end
-
-local function init(options)
-  if (options) then
-    if (options.Name) then
-      local filename = "/MODELS/" .. options.Name .. "lua";
-      cfgName = filename;
-      local fd = io.open(filename, "r");
-      if (fd) then
-        local configFunction = loadfile(filename);
-        if (configFunction) then
-          config = configFunction();
-        end
-      end
-    end
-  end
-  if not config then
-    cfgName = model.getInfo().name .. ".lua";
-    local configFunction = loadfile(cfgName);
-    if (configFunction) then
-      config = configFunction();
-    end
-  end
-  if not config then
-    cfgName = defaultFilename;
-    config = loadfile(defaultFilename)();
-  end
-
-  if (config.menu) then
-    menu = config.menu;
-  end
-
-  local lsFI = getFieldInfo(menu.scrollUpDn);
-  if (lsFI) then
-    lsID = lsFI.id;
-  end
-
-  local rsFI = getFieldInfo(menu.scrollLR);
-  if (rsFI) then
-    rsID = rsFI.id;
-  end
-
-  menu.state.activeRow = 0;
-  menu.state.activeCol = 0;
-  menu.state.activePage = menu.pages[1];
-  for i,p in ipairs(menu.pages) do
-    p.next = nil;
-    p.prev = nil;
-  end
-  for p = 1, #menu.pages do
-    menu.pages[p].next = menu.pages[(p % #menu.pages) + 1]; 
-    menu.pages[p].number = p;
-    menu.pages[p].desc = "Page: " .. tostring(p) .. "/" .. tostring(#menu.pages);
-  end
-  for p = 1, #menu.pages do
-    menu.pages[p].prev = menu.pages[(( p + #menu.pages - 2) % #menu.pages) + 1]; 
-  end
-
---  for i,p in ipairs(menu.pages) do
---    for k, item in ipairs(p) do
---      item.cb = select;
---      sstate.switches[#sstate.switches + 1] = item;
---    end
---  end
-
-  for i,p in ipairs(menu.pages) do
-    for k, item in ipairs(p.items) do
-      if (item.data.switch) then
-        shortCuts[#shortCuts + 1] = {item = item, switch = item.data.switch};
-        item.name = item.name .. "/" .. item.data.switch;
-      end
-    end
-  end
-end
-
-local function swState(s) 
-  local v = getValue(s);
-  if (v < 0) then
-    return 2;
-  elseif (v > 0) then
-    return 3;
-  else 
-    return 1;
-  end
-end
-
-local function readShortCuts() 
-  for i,s in ipairs(shortCuts) do
-    local ns = swState(s.switch);
-    if not (s.item.state == ns) then
-      --     print(ns);
+local function readShortCuts(menu) 
+  for i,s in ipairs(menu.shortCuts) do
+    local ns = lib.switchState(s.switch);
+    if not (s.last == ns) then
       s.item.state = ns;
-      sendValue(1, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
+      s.last = ns;
+      sendValue(1, lib.encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
     end
   end
 end
@@ -251,7 +148,7 @@ local function background()
       end
     end
   elseif (mode == 1) then
-    readShortCuts();
+    readShortCuts(menu);
   end 
 end
 
@@ -260,7 +157,7 @@ local function toggle(count, state, module)
   queue:push(e);
 end
 
-local function select(item)
+local function select(item, menu)
   if (not item) then
     return;
   end
@@ -275,227 +172,60 @@ local function select(item)
       item.state = menu.state.activeCol;
     end
   elseif (mode == 1) then
---    print("sel: ", item.name, item.state, menu.state.activeCol);
+    print("sel: ", item, item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
-    sendValue(1, encodeFunction(item.data.module, item.data.count, item.state)); 
+    sendValue(1, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
   end
 end
 
-local function displayMenu(menu, event, pie)  
-  lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
-
-  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y, menu.state.activePage.desc, SMLSIZE);
-
-  if (config) then
-    lcd.drawText(pie.zone.x, pie.zone.y + 32 + 9 * 16, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. cfgName, SMLSIZE);
-  end
-  -- lcd.clear()
-  local n = 0;
-  for i,pa in ipairs(menu.pages) do
-    if (pa == menu.state.activePage) then 
-      n = i; 
-    end
-  end
---    lcd.drawScreenTitle(menu.title, n, #menu.pages);
-  local p = menu.state.activePage;
-
-  for row, opt in ipairs(p.items) do
-    local x = pie.zone.x;
-    local y = pie.zone.y + 32 + (row - 1) * 16;
-    local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
-    lcd.drawText(x, y, opt.name, attr);
-    if opt.states then
-      local fw = pie.zone.w / (#opt.states + 1);
-      for col, st in ipairs(opt.states) do
-        x = x + fw;
---        attr = (col == opt.state) and INVERS or 0
-        if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
-          lcd.drawText(x, y, st, BLINK + INVERS + SMLSIZE);
---          attr = BLINK;
-        else
-          if (col == opt.state) then
-            lcd.drawText(x, y, st, INVERS + SMLSIZE);
-          else
-            lcd.drawText(x, y, st, SMLSIZE);
-          end
-        end
---        lcd.drawText(x, y, st, attr);
-      end
-    else
-      fw = pie.zone.w / 2;
-      x = x + fw;
-      lcd.drawNumber(x, y, opt.value);
-    end
-  end
-end
-
-local function processEvents(menu, event, pie)
-  local p = menu.state.activePage;
-  if event == EVT_VIRTUAL_DEC then
-    if (EVT_VIRTUAL_DEC == EVT_VIRTUAL_PREV) then
-      if (menu.state.activeCol > 1) then
-        menu.state.activeCol = menu.state.activeCol - 1;
-      else
-        if (menu.state.activeRow > 1) then
-          menu.state.activeRow = menu.state.activeRow - 1;
-          menu.state.activeCol = #p.items[menu.state.activeRow].states;
-        else
-          if p.prev then
-            menu.state.activePage = p.prev;
-            menu.state.activeRow = #p.items;
-            menu.state.activeCol = #p.items[#p.items].states;
-          end
-        end
-      end
-    else
-      if (menu.state.activeRow < #p.items) then
-        menu.state.activeRow = menu.state.activeRow + 1;
-      end
-    end
-  elseif event == EVT_VIRTUAL_INC then
-    if (EVT_VIRTUAL_INC == EVT_VIRTUAL_NEXT) then
-      if (menu.state.activeRow < 1) then
-        menu.state.activeRow = 1;
-      end
-      if (menu.state.activeCol < #p.items[menu.state.activeRow].states) then
-        menu.state.activeCol = menu.state.activeCol + 1;
-      else
-        if (menu.state.activeRow < #p.items) then
-          menu.state.activeRow = menu.state.activeRow + 1;
-          menu.state.activeCol = 1;
-        else
-          if p.next then
-            menu.state.activePage = p.next;
-            menu.state.activeRow = 1;
-            menu.state.activeCol = 1;
-          end
-        end
-      end
-    else
-      if menu.state.activeRow > 1 then
-        menu.state.activeRow = menu.state.activeRow - 1;
-      end
-    end
-  elseif event == 100 or event == EVT_VIRTUAL_NEXT then
-    menu.state.activeCol = menu.state.activeCol + 1;
-  elseif event == 101 or event == EVT_VIRTUAL_PREV then
-    if menu.state.activeCol > 1 then
-      menu.state.activeCol = menu.state.activeCol - 1;
-    end
-  elseif event == EVT_VIRTUAL_ENTER then
-    if (menu.state.activeRow > 0) then
-      select(p.items[menu.state.activeRow]);
-      if p.items[menu.state.activeRow].cb then
-        p.items[menu.state.activeRow].cb(menu);
-      end
-    end
-  elseif event == EVT_VIRTUAL_EXIT then
-    menu.state.activeRow = 0;
-    menu.state.activeCol = 1;
-  end
-
-  if menu.state.activeRow > 0 then
-    if p.items[menu.state.activeRow].states then
-      if menu.state.activeCol > #p.items[menu.state.activeRow].states then
-        menu.state.activeCol = #p.items[menu.state.activeRow].states;
-      end
-    end
-  else
-    if event == 100 or event == EVT_VIRTUAL_NEXT then
-      if p.next then
-        menu.state.activePage = p.next;
-      end
-    elseif event == 101 or event == EVT_VIRTUAL_PREVT then
-      if p.prev then
-        menu.state.activePage = p.prev;
-      end
-    end
-  end
-end
-
-local buttons = {
-  lastn = 0,
-  lastp = 0,
-  lastl = 0,
-  lastr = 0,
-  lasts = 0
-}
-
-local function inputToMenuLine(name) 
-  local p = menu.state.activePage;
-  local n = #p.items;
-  local v = getValue(name) + 1024;
-  local l = n - math.floor((v * n) / 2049);
-  return l;
-end
-
-local function inputToMenuCol(name) 
-  local p = menu.state.activePage;
-  if (menu.state.activeRow > 0) then
-    local n = #p.items[menu.state.activeRow].states;
-    local v = getValue(name) + 1024;
-    local l = math.floor((v * n) / 2049) + 1;
-    return l;
-  end
-  return 0;
-end
-
-
-local function readButtons(pie)  
-  local e = 0;
-  local nv = getValue(pie.options.Next);
-  if (nv > buttons.lastn) then
-    e = EVT_VIRTUAL_INC;
-  end
-  local pv = getValue(pie.options.Previous);
-  if (pv > buttons.lastp) then
-    e = EVT_VIRTUAL_DEC;
-  end
-  local lv = 0;
-  if (lsID > 0) then
-    lv = inputToMenuLine(lsID);
-    if not (lv == buttons.lastl) then
-      menu.state.activeRow = lv;
-    end
-  else
---    local lv = getValue(pie.options.Left);
---    if (lv > buttons.lastl) then
---      e = EVT_VIRTUAL_PREV;
---    end
-  end
-  local rv= 0;
-  if (rsID > 0) then
-    rv = inputToMenuCol(rsID);
-    if not (rv == buttons.lastr) then
-      menu.state.activeCol = rv;
-    end
-  else
---    local rv = getValue(pie.options.Right);
---    if (rv > buttons.lastr) then
---      e =  EVT_VIRTUAL_NEXT;
---    end
-  end
-
-  local sv = getValue(pie.options.Select);
-  if (sv > buttons.lasts) then
-    e =  EVT_VIRTUAL_ENTER;
-  end
-  buttons.lastn = nv;
-  buttons.lastp = pv;
-  buttons.lastl = lv;
-  buttons.lastr = rv;
-  buttons.lasts = sv;
-
-  return e;
-end 
 
 local function run(event, pie)
   if not event then
-    event = readButtons(pie);
+    event = lib.readButtons(pie);
   end
-  processEvents(menu, event);
-  displayMenu(menu, event, pie);
+  lib.readSpeedDials(lsID, rsID, pie, menu);
+  lib.processEvents(menu, event, pie);
+  lib.displayMenu(menu, event, pie, config);
 --   killEvents(event);
+end
+
+local function init(options)
+  lib = loadfile("/SCRIPTS/WM/wmlib.lua")();
+
+  local cfgName = nil;
+  if (options) then
+    if (options.Name) then
+      local filename = "/MODELS/" .. options.Name .. "lua";
+      cfgName = filename;
+      local fd = io.open(filename, "r");
+      if (fd) then
+        local configFunction = loadfile(filename);
+        if (configFunction) then
+          config = configFunction();
+        end
+      end
+    end
+  end
+  if not config then
+    cfgName = model.getInfo().name .. ".lua";
+    local configFunction = loadfile(cfgName);
+    if (configFunction) then
+      config = configFunction();
+    end
+  end
+  if not config then
+    cfgName = defaultFilename;
+    config = loadfile(defaultFilename)();
+  end
+
+  config.cfgName = cfgName;
+
+  if (config.menu) then
+    menu = config.menu;
+  end
+
+  lib.initMenu(menu, select);
+
 end
 
 local options = {
@@ -519,5 +249,6 @@ function refresh(pie)
   background();
   run(nil, pie);
 end
+
 
 return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh}
