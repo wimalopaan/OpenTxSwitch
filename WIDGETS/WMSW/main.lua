@@ -47,33 +47,13 @@ local menu = {
         {name = "Fun G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
         {name = "Fun H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
       }
-    },
-    {
-      items = {
-        {name = "Nuf A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
-        {name = "Nuf B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 2}},
-        {name = "Nuf C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 2}},
-        {name = "Nuf D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 2}},
-        {name = "Nuf E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 2}},
-        {name = "Nuf F", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 2}},
-        {name = "Nuf G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 2}},
-        {name = "Nuf H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 2}},
-      }
-    },
-    {
-      items = {
-        {name = "Ufn A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
-        {name = "Ufn B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 3}},
-        {name = "Ufn C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 3}},
-        {name = "Ufn D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 3}},
-        {name = "Ufn E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 3}},
-        {name = "Ufn F", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 3}},
-        {name = "Ufn G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 3}},
-        {name = "Ufn H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 3}},
-      }
     }
   }
 }   
+
+local defaultFilename = "/MODELS/swstd.lua";
+local cfgName = nil;
+local config = nil;
 
 ---- mostly valid values
 
@@ -140,7 +120,36 @@ local function findInputId(name)
   return 0;
 end
 
-local function init()
+local function init(options)
+  if (options) then
+    if (options.Name) then
+      local filename = "/MODELS/" .. options.Name .. "lua";
+      cfgName = filename;
+      local fd = io.open(filename, "r");
+      if (fd) then
+        local configFunction = loadfile(filename);
+        if (configFunction) then
+          config = configFunction();
+        end
+      end
+    end
+  end
+  if not config then
+    cfgName = model.getInfo().name .. ".lua";
+    local configFunction = loadfile(cfgName);
+    if (configFunction) then
+      config = configFunction();
+    end
+  end
+  if not config then
+    cfgName = defaultFilename;
+    config = loadfile(defaultFilename)();
+  end
+
+  if (config.menu) then
+    menu = config.menu;
+  end
+
   local lsFI = getFieldInfo(menu.scrollUpDn);
   if (lsFI) then
     lsID = lsFI.id;
@@ -160,6 +169,8 @@ local function init()
   end
   for p = 1, #menu.pages do
     menu.pages[p].next = menu.pages[(p % #menu.pages) + 1]; 
+    menu.pages[p].number = p;
+    menu.pages[p].desc = "Page: " .. tostring(p) .. "/" .. tostring(#menu.pages);
   end
   for p = 1, #menu.pages do
     menu.pages[p].prev = menu.pages[(( p + #menu.pages - 2) % #menu.pages) + 1]; 
@@ -197,7 +208,7 @@ local function readShortCuts()
   for i,s in ipairs(shortCuts) do
     local ns = swState(s.switch);
     if not (s.item.state == ns) then
-      print(ns);
+      --     print(ns);
       s.item.state = ns;
       sendValue(1, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
     end
@@ -273,6 +284,12 @@ end
 
 local function displayMenu(menu, event, pie)  
   lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
+
+  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y, menu.state.activePage.desc, SMLSIZE);
+
+  if (config) then
+    lcd.drawText(pie.zone.x, pie.zone.y + 32 + 9 * 16, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. cfgName, SMLSIZE);
+  end
   -- lcd.clear()
   local n = 0;
   for i,pa in ipairs(menu.pages) do
@@ -470,13 +487,14 @@ local function readButtons(pie)
   buttons.lastr = rv;
   buttons.lasts = sv;
 
-  print(lv);
   return e;
 end 
 
 local function run(event, pie)
-  local e = readButtons(pie);
-  processEvents(menu, e);
+  if not event then
+    event = readButtons(pie);
+  end
+  processEvents(menu, event);
   displayMenu(menu, event, pie);
 --   killEvents(event);
 end
@@ -484,12 +502,13 @@ end
 local options = {
   { "Next",     SOURCE, 8},
   { "Previous", SOURCE, 9},
-  { "Select",   SOURCE, 10}
+  { "Select",   SOURCE, 10},
+  { "Name", STRING, "swstd"}  -- bug in OpenTX?
 }
 
 local function create(zone, options)
   init(options);
-  local pie = { zone=zone, options=options, counter=0 };
+  local pie = { zone=zone, options=options};
   return pie;
 end
 
