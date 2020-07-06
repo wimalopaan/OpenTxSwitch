@@ -16,6 +16,26 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+local function encodeFunction(address, number, state)
+--  print("encodeF:", address, number, state);
+  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
+end
+
+local function encodeParameter(parameter, value)
+--  print("encodeP:", parameter, value);
+  return (512 + (parameter - 1) * 32 + value + 0.5) * 2 - 1024;
+end
+
+local function sendValue(gvar, value)
+--  print("sendV: ", value);
+  model.setGlobalVariable(gvar + 4, getFlightMode(), value);
+end
+
+local function broadcastReset() 
+  print("bcast reset");
+  sendValue(1, encodeParameter(16, 31)); -- broadcast, turn off all outputs
+end 
+
 local function switchState(s) 
   local v = getValue(s);
   if (v < 0) then
@@ -25,6 +45,16 @@ local function switchState(s)
   else 
     return 1;
   end
+end
+
+local function scaleParameterValue(v)
+  local s = ((v + 1024) * 32) / 2048;
+  if (s > 31) then
+    s = 31;
+  elseif (s < 0) then
+    s = 0;
+  end
+  return math.floor(s);
 end
 
 local function initMenu(menu, select) 
@@ -253,6 +283,17 @@ local function readButtons(pie)
   return e;
 end 
 
+local function sendShortCuts(menu) 
+  for i,s in ipairs(menu.shortCuts) do
+    local ns = switchState(s.switch);
+    if not (s.last == ns) then
+      s.item.state = ns;
+      s.last = ns;
+      sendValue(1, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
+    end
+  end
+end
+
 local function inputToMenuLine(name, menu) 
   local p = menu.state.activePage;
   local n = #p.items;
@@ -296,7 +337,7 @@ local function findInputId(name)
   for i=0,31 do
     local inp = getFieldInfo("input" .. i);
     if (inp) then
-      print(i, inp.desc);
+      -- print(i, inp.desc);
       if (inp.name == name) then
         return i;
       end
@@ -305,15 +346,7 @@ local function findInputId(name)
   return 0;
 end
 
-local function encodeFunction(address, number, state)
-  print("encodeF:", address, number, state);
-  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
-end
-
-local function encodeParameter(parameter, value)
-  print("encodeP:", parameter, value);
-  return (512 + (parameter - 1) * 32 + value + 0.5) * 2 - 1024;
-end
-
-return {initMenu = initMenu, displayMenu = displayMenu, findInputId = findInputId, encodeFunction = encodeFunction, encodeParameter = encodeParameter, processEvents = processEvents,
-  readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState};
+return {initMenu = initMenu, displayMenu = displayMenu, findInputId = findInputId, 
+  encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
+  processEvents = processEvents,
+  readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, sendShortCuts = sendShortCuts, broadcastReset = broadcastReset};

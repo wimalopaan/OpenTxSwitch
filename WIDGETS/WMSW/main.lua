@@ -16,11 +16,7 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
--- define menu
-
--- Version 0.2
---- Customization:
----- only modify menu: name, states, switch (if needed) 
+-- define fallback menu
 
 local mode = 1; -- 0: tiptip; 1: digital-idempotential
 
@@ -94,23 +90,16 @@ function queue:size()
   return self.last - self.first + 1;
 end
 
-local function sendValue(gvar, value)
---  print("sendV: ", value);
-  model.setGlobalVariable(gvar + 4, getFlightMode(), value);
-end
-
-
-local function readShortCuts(menu) 
-  for i,s in ipairs(menu.shortCuts) do
-    local ns = lib.switchState(s.switch);
-    if not (s.last == ns) then
-      s.item.state = ns;
-      s.last = ns;
-      sendValue(1, lib.encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
-    end
-  end
-end
-
+--local function readShortCuts(menu) 
+--  for i,s in ipairs(menu.shortCuts) do
+--    local ns = lib.switchState(s.switch);
+--    if not (s.last == ns) then
+--      s.item.state = ns;
+--      s.last = ns;
+--      lib.sendValue(1, lib.encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
+--    end
+--  end
+--end
 
 local function background()
   if (mode == 0) then
@@ -125,13 +114,13 @@ local function background()
       sstate.active.startTime = getTime();
       sstate.active.pulseCount = 1;
       sstate.active.nextToggle = getTime() + ((sstate.active.item.count == 1) and parameter.pulse.long or parameter.pulse.duration);
-      sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);      
+      lib.sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);      
       sstate.state = sstate.states.pulse;
       sstate.active.on = true;
     elseif (sstate.state == sstate.states.pulse) then
       if (getTime() > sstate.active.nextToggle) then
         if (sstate.active.on) then
-          sendValue(sstate.active.item.module, parameter.pulseValue[parameter.neutral]);
+          lib.sendValue(sstate.active.item.module, parameter.pulseValue[parameter.neutral]);
           sstate.active.on = false;
           sstate.active.nextToggle = sstate.active.nextToggle + parameter.pulse.pause;
           if (sstate.active.item.count == sstate.active.pulseCount) then
@@ -141,14 +130,14 @@ local function background()
           end
         else 
           sstate.active.pulseCount = sstate.active.pulseCount + 1;
-          sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);
+          lib.sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);
           sstate.active.on = true;
           sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.item.count > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
         end
       end
     end
   elseif (mode == 1) then
-    readShortCuts(menu);
+    lib.sendShortCuts(menu);
   end 
 end
 
@@ -174,10 +163,9 @@ local function select(item, menu)
   elseif (mode == 1) then
     print("sel: ", item, item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
-    sendValue(1, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
+    lib.sendValue(1, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
   end
 end
-
 
 local function run(event, pie)
   if not event then
@@ -186,7 +174,6 @@ local function run(event, pie)
   lib.readSpeedDials(lsID, rsID, pie, menu);
   lib.processEvents(menu, event, pie);
   lib.displayMenu(menu, event, pie, config);
---   killEvents(event);
 end
 
 local function init(options)
@@ -225,7 +212,6 @@ local function init(options)
   end
 
   lib.initMenu(menu, select);
-
 end
 
 local options = {
