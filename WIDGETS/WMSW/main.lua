@@ -31,7 +31,7 @@ local menu = {
     activeCol = 1,
     activePage = nil
   },
-  
+
   pages = {
     {
       items = {
@@ -57,8 +57,8 @@ local lib = nil;
 local parameter = {
   pulse = {duration = 30, pause = 30, long = 100}; -- 300ms/750ms
   dead = {duration = 100, lastAction = getTime()}; -- 3s before next action 
-  pulseValue = {-1024, 0, 1024};
-  neutral = 2; -- index
+  pulseValue = {0, -1024, 1024, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  neutral = 1; -- index
 }
 
 ----- nothing to setup below this line
@@ -142,6 +142,7 @@ local function background()
 end
 
 local function toggle(count, state, module)
+  print("toggle", count, state, module);
   local e = {count = count, state = state, module = module};
   queue:push(e);
 end
@@ -174,6 +175,14 @@ local function run(event, pie)
   lib.readSpeedDials(lsID, rsID, pie, menu);
   lib.processEvents(menu, event, pie);
   lib.displayMenu(menu, event, pie, config);
+
+  if (mode == 0) then
+    if not (sstate.state == sstate.states.idle) then
+      lib.displayInfo(pie, "busy!");
+    else
+      lib.displayInfo(pie, "-----");
+    end
+  end
 end
 
 local function init(options)

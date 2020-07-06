@@ -101,13 +101,25 @@ local function initMenu(menu, select)
   end
 end
 
+local function displayFooter(pie, text)
+  lcd.drawText(pie.zone.x, pie.zone.y + 32 + 9 * 16, text, SMLSIZE);
+end
+
+local function displayHeader(pie, text)
+  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y, text, SMLSIZE);
+end
+
+local function displayInfo(pie, text)
+  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + 16, text, SMLSIZE);
+end
+
 local function displayMenu(menu, event, pie, config)  
   lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
 
-  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y, menu.state.activePage.desc, SMLSIZE);
+  displayHeader(pie, menu.state.activePage.desc);
 
   if (config) then
-    lcd.drawText(pie.zone.x, pie.zone.y + 32 + 9 * 16, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. config.cfgName, SMLSIZE);
+    displayFooter(pie, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. config.cfgName);
   end
   -- lcd.clear()
   local n = 0;
@@ -346,7 +358,7 @@ local function findInputId(name)
   return 0;
 end
 
-return {initMenu = initMenu, displayMenu = displayMenu, findInputId = findInputId, 
+return {initMenu = initMenu, displayMenu = displayMenu, findInputId = findInputId, displayInfo = displayInfo,
   encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
   processEvents = processEvents,
   readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, sendShortCuts = sendShortCuts, broadcastReset = broadcastReset};
