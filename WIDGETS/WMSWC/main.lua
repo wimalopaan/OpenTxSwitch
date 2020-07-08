@@ -19,7 +19,7 @@
 --- define fallback menu
 
 local menu = {
-  title = "WM Multikanal Config 0.2",
+  title = "WM Multikanal Config 0.4",
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -28,14 +28,15 @@ local menu = {
   pages = {
     {
       items = {
-        {name = "Fun A1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
-        {name = "Fun B1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
-        {name = "Fun C1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
-        {name = "Fun D1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
-        {name = "Fun E1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
-        {name = "Fun F1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
-        {name = "Fun G1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
-        {name = "Fun H1", states = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"}, state = 0, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
+        -- do NOT use states
+        {name = "Fun A1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
+        {name = "Fun B1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
+        {name = "Fun C1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
+        {name = "Fun D1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
+        {name = "Fun E1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
+        {name = "Fun F1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
+        {name = "Fun G1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
+        {name = "Fun H1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
       }
     }
   }
@@ -43,7 +44,7 @@ local menu = {
 
 -----
 
-local parameters = {"PWM", "B1/Int", "B1/d", "B2/Int", "B2/d", "PThru", "Min", "Max"};
+local parameters = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "Min", "Max"};
 
 local defaultFilename = "/MODELS/swstd.lua";
 local cfgName = nil;
