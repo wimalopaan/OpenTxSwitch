@@ -146,7 +146,7 @@ local function background()
   elseif (mode == 1) then
     local t = getTime();
     if (queue:size() > 0) then
-      print("q > 0");
+--      print("q > 0");
       if ((t - lastbg1) > stateTimeout) then
         lastbg = t;
         lastbg1 = t;
@@ -156,7 +156,7 @@ local function background()
     else
       if ((t - lastbg) > stateTimeout) then
         lastbg = t;
-        print("state", cycle);
+--        print("state", cycle);
         local i = menu.allItems[cycle];
         lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
         cycle = cycle + 1;
@@ -191,7 +191,7 @@ local function select(item, menu)
       item.state = menu.state.activeCol;
     end
   elseif (mode == 1) then
-    print("sel: ", item, item.name, item.state, menu.state.activeCol);
+--    print("sel: ", item, item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
     queue:push(item);
 --    lib.sendValue(gVar, lib.encodeFunction(item.data.module, item.data.count, item.state)); 

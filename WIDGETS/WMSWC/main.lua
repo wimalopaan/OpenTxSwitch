@@ -67,14 +67,14 @@ local function pushValue()
   local dt = getTime() - lastSelection.time;
   if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
     local v = lib.scaleParameterValue(getValue(menu.parameterDial));
-    print("push: ", v);
+--    print("push: ", v);
     lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
   end
 end
 
 
 local function deselectAll() 
-  print("desel");
+--  print("desel");
   for prow, p in ipairs(menu.pages) do
     for row, item in ipairs(p.items) do
       item.state = 0;
@@ -85,7 +85,7 @@ local function deselectAll()
 end
 
 local function select(item, menu)
-  print("sel: ", item.name, item.state, menu.state.activeCol);
+--  print("sel: ", item.name, item.state, menu.state.activeCol);
   deselectAll();
   lastSelection.item = item;
   lastSelection.col = menu.state.activeCol;
@@ -101,7 +101,7 @@ local function selectFollow()
     followHasRun = true;
     lastSelection.time = getTime();
     lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
-    print("selFollow");
+ --   print("selFollow");
   end
 end
 

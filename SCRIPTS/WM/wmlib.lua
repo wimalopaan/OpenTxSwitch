@@ -32,7 +32,7 @@ local function sendValue(gvar, value)
 end
 
 local function broadcastReset(gvar) 
-  print("bcast reset");
+--  print("bcast reset");
   sendValue(gvar, encodeParameter(16, 31)); -- broadcast, turn off all outputs
 end 
 
