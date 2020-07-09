@@ -92,6 +92,21 @@ function queue:size()
   return self.last - self.first + 1;
 end
 
+local function sendShortCuts() 
+  for i,s in ipairs(menu.shortCuts) do
+    local ns = lib.switchState(s.switch);
+    if not (s.last == ns) then
+      s.item.state = ns;
+      s.last = ns;
+      queue:push(s.item);
+    end
+  end
+end
+
+local lastbg = getTime();
+local lastbg1 = getTime();
+local cycle = 1;
+
 local function background()
   if (mode == 0) then
     if (sstate.state == sstate.states.deadWait) and (getTime() > (parameter.dead.lastAction + parameter.dead.duration)) then
@@ -128,7 +143,28 @@ local function background()
       end
     end
   elseif (mode == 1) then
-    lib.sendShortCuts(menu, gVar);
+    local t = getTime();
+    if (queue:size() > 0) then
+      print("q>0");
+      if ((t - lastbg1) > 10) then
+        lastbg1 = t;
+        local i = queue:pop();
+        lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
+      end
+    else
+      if ((t - lastbg) > 10) then
+        lastbg = t;
+        print("state", cycle);
+        local i = menu.allItems[cycle];
+        lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
+        cycle = cycle + 1;
+        if (cycle > #menu.allItems) then
+          cycle = 1;
+        end
+      end
+    end
+    sendShortCuts();
+--    lib.sendShortCuts(menu, gVar);
   end 
 end
 
@@ -155,7 +191,8 @@ local function select(item, menu)
   elseif (mode == 1) then
     print("sel: ", item, item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
-    lib.sendValue(gVar, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
+    queue:push(item);
+--    lib.sendValue(gVar, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
   end
 end
 

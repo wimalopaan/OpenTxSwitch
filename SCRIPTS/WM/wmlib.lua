@@ -90,6 +90,13 @@ local function initMenu(menu, select)
     end
   end
 
+  menu.allItems = {};
+  for i,p in ipairs(menu.pages) do
+    for k, item in ipairs(p.items) do
+      menu.allItems[#menu.allItems + 1] = item;
+    end
+  end
+
   menu.shortCuts = {};
   for i,p in ipairs(menu.pages) do
     for k, item in ipairs(p.items) do
