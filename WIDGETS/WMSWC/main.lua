@@ -19,7 +19,7 @@
 --- define fallback menu
 
 local menu = {
-  title = "WM Multikanal Config Fallback 0.4",
+  title = "WM Multikanal Config Fallback",
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -165,7 +165,7 @@ local function init(options)
 
   menu.title = menu.title.. " - Config";
 
-  lib.initMenu(menu, select);
+  lib.initMenu(menu, select, cfg.version);
 
   for i,p in ipairs(menu.pages) do
     for k,item in ipairs(p.items) do

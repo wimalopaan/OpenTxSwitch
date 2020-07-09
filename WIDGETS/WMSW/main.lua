@@ -21,7 +21,7 @@
 local mode = 1; -- 0: tiptip; 1: digital-idempotential
 
 local menu = {
-  title = "WM MultiSwitch Fallback 0.4",
+  title = "WM MultiSwitch Fallback",
 
   scrollUpDn = "ls", -- speedDials: direct navigating
   scrollLR = "rs",
@@ -257,7 +257,7 @@ local function init(options)
     menu = config.menu;
   end
 
-  lib.initMenu(menu, select);
+  lib.initMenu(menu, select, cfg.version);
 end
 
 local options = {

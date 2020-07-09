@@ -21,7 +21,7 @@ local name = "Default";
 local gVariable = 5;
 
 local menu = {
-  title = "WM MultiSwitch 0.4",
+  title = "WM MultiSwitch",
 
   scrollUpDn = "ls", -- direct navigating
   scrollLR = "rs",

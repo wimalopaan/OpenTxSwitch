@@ -57,7 +57,10 @@ local function scaleParameterValue(v)
   return math.floor(s);
 end
 
-local function initMenu(menu, select) 
+local function initMenu(menu, select, version)
+  if (version) then
+    menu.title = menu.title .. version;
+  end
   local lsFI = getFieldInfo(menu.scrollUpDn);
   if (lsFI) then
     menu.lsID = lsFI.id;
