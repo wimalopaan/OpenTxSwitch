@@ -26,6 +26,8 @@ local menu = {
   scrollUpDn = "ls", -- direct navigating
   scrollLR = "rs",
 
+  parameterDial = "s1",
+
   state = {
     activeRow = 1,
     activeCol = 1,

@@ -20,6 +20,9 @@
 
 local menu = {
   title = "WM Multikanal Config Fallback",
+
+  parameterDial = "s1",
+
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -63,7 +66,7 @@ local followHasRun = false;
 local function pushValue()
   local dt = getTime() - lastSelection.time;
   if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
-    local v = lib.scaleParameterValue(getValue("s1"));
+    local v = lib.scaleParameterValue(getValue(menu.parameterDial));
     print("push: ", v);
     lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
   end
@@ -107,7 +110,7 @@ local function percent(value)
 end
 
 local function printParameter(pie)
-  local r = getValue("s1");
+  local r = getValue(menu.parameterDial);
   local v = lib.scaleParameterValue(r);
   lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + 16, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), SMLSIZE);
 end
