@@ -147,6 +147,7 @@ local function background()
     if (queue:size() > 0) then
       print("q>0");
       if ((t - lastbg1) > 10) then
+        lastbg = t;
         lastbg1 = t;
         local i = queue:pop();
         lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
