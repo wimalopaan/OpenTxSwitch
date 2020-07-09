@@ -53,6 +53,7 @@ local config = nil;
 local lib = nil;
 local gVar = 5; -- fallback for digital switches
 local gVarOffset = 5; -- fallback for tiptip switches: gvar[module] = gVarOffset + module. Modules begin with 1, so gvars start with 6. 
+local stateTimeout = 10;  --fallback
 
 ---- mostly valid values
 
@@ -145,15 +146,15 @@ local function background()
   elseif (mode == 1) then
     local t = getTime();
     if (queue:size() > 0) then
-      print("q>0");
-      if ((t - lastbg1) > 10) then
+      print("q > 0");
+      if ((t - lastbg1) > stateTimeout) then
         lastbg = t;
         lastbg1 = t;
         local i = queue:pop();
         lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
       end
     else
-      if ((t - lastbg) > 10) then
+      if ((t - lastbg) > stateTimeout) then
         lastbg = t;
         print("state", cycle);
         local i = menu.allItems[cycle];
@@ -221,6 +222,7 @@ local function init(options)
   if (cfg) then
     gVar = cfg.switchGVar;
     gVarOffset = cfg.offsetGVar;
+    stateTimeout = cfg.stateTimeout;
   end
 
   local cfgName = nil;
