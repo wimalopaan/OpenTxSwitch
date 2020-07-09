@@ -106,7 +106,7 @@ local function percent(value)
   return math.floor((value + 1024) * 100 / 2048);
 end
 
-local function printParamater(pie)
+local function printParameter(pie)
   local r = getValue("s1");
   local v = lib.scaleParameterValue(r);
   lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + 16, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), SMLSIZE);
@@ -118,7 +118,7 @@ local function run(event, pie)
   end
   lib.processEvents(menu, event, pie);
   lib.displayMenu(menu, event, pie, config);
-  printParamater(pie);  
+  printParameter(pie);  
   selectFollow();
   pushValue();
 end
