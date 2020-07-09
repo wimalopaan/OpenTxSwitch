@@ -28,12 +28,12 @@ end
 
 local function sendValue(gvar, value)
 --  print("sendV: ", value);
-  model.setGlobalVariable(gvar + 4, getFlightMode(), value);
+  model.setGlobalVariable(gvar, getFlightMode(), value);
 end
 
-local function broadcastReset() 
+local function broadcastReset(gvar) 
   print("bcast reset");
-  sendValue(1, encodeParameter(16, 31)); -- broadcast, turn off all outputs
+  sendValue(gvar, encodeParameter(16, 31)); -- broadcast, turn off all outputs
 end 
 
 local function switchState(s) 
@@ -295,13 +295,13 @@ local function readButtons(pie)
   return e;
 end 
 
-local function sendShortCuts(menu) 
+local function sendShortCuts(menu, gvar) 
   for i,s in ipairs(menu.shortCuts) do
     local ns = switchState(s.switch);
     if not (s.last == ns) then
       s.item.state = ns;
       s.last = ns;
-      sendValue(1, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
+      sendValue(gvar, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
     end
   end
 end

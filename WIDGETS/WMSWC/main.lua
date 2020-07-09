@@ -19,7 +19,7 @@
 --- define fallback menu
 
 local menu = {
-  title = "WM Multikanal Config 0.4",
+  title = "WM Multikanal Config Fallback 0.4",
   state = {
     activeRow = 1,
     activeCol = 1,
@@ -50,6 +50,8 @@ local defaultFilename = "/MODELS/swstd.lua";
 local cfgName = nil;
 local config = nil;
 local lib = nil;
+local gVar = 5; -- fallback for digital switches
+local gVarOffset = 5; -- fallback for tiptip switches: gvar[module] = gVarOffset + module. Modules begin with 1, so gvars start with 6. 
 
 ----- nothing to setup below this line
 
@@ -63,7 +65,7 @@ local function pushValue()
   if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
     local v = lib.scaleParameterValue(getValue("s1"));
     print("push: ", v);
-    lib.sendValue(1, lib.encodeParameter(lastSelection.col, v));
+    lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
   end
 end
 
@@ -85,7 +87,7 @@ local function select(item, menu)
   lastSelection.item = item;
   lastSelection.col = menu.state.activeCol;
   item.state = menu.state.activeCol;
-  lib.broadcastReset();
+  lib.broadcastReset(gVar);
   lastSelection.time = getTime();
   followHasRun = false;
 end
@@ -95,7 +97,7 @@ local function selectFollow()
   if (lastSelection.item and (dt > 10) and not followHasRun) then
     followHasRun = true;
     lastSelection.time = getTime();
-    lib.sendValue(1, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
+    lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
     print("selFollow");
   end
 end
@@ -123,6 +125,12 @@ end
 
 local function init(options)
   lib = loadfile("/SCRIPTS/WM/wmlib.lua")();
+  local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
+
+  if (cfg) then
+    gVar = cfg.switchGVar;
+    gVarOffset = cfg.offsetGVar;
+  end
 
   if (options) then
     if (options.Name) then

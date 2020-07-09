@@ -20,8 +20,17 @@ local input = {}
 
 local output = { "encib" }
 
-local function run()
-   return model.getGlobalVariable(5, 0);
+local gvar = 5; -- fallback
+
+local function init() 
+  cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
+  if (cfg) then
+    gvar = cfg.switchGVar;
+  end
 end
 
-return {output=output, input=input, run=run}
+local function run()
+  return model.getGlobalVariable(gvar, 0);
+end
+
+return {output=output, input=input, run=run, init=init}

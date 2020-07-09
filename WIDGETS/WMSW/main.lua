@@ -21,7 +21,7 @@
 local mode = 1; -- 0: tiptip; 1: digital-idempotential
 
 local menu = {
-  title = "WM MultiSwitch 0.3",
+  title = "WM MultiSwitch Fallback 0.4",
 
   scrollUpDn = "ls", -- speedDials: direct navigating
   scrollLR = "rs",
@@ -51,6 +51,8 @@ local menu = {
 local defaultFilename = "/MODELS/swstd.lua";
 local config = nil;
 local lib = nil;
+local gVar = 5; -- fallback for digital switches
+local gVarOffset = 5; -- fallback for tiptip switches: gvar[module] = gVarOffset + module. Modules begin with 1, so gvars start with 6. 
 
 ---- mostly valid values
 
@@ -90,17 +92,6 @@ function queue:size()
   return self.last - self.first + 1;
 end
 
---local function readShortCuts(menu) 
---  for i,s in ipairs(menu.shortCuts) do
---    local ns = lib.switchState(s.switch);
---    if not (s.last == ns) then
---      s.item.state = ns;
---      s.last = ns;
---      lib.sendValue(1, lib.encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
---    end
---  end
---end
-
 local function background()
   if (mode == 0) then
     if (sstate.state == sstate.states.deadWait) and (getTime() > (parameter.dead.lastAction + parameter.dead.duration)) then
@@ -114,13 +105,13 @@ local function background()
       sstate.active.startTime = getTime();
       sstate.active.pulseCount = 1;
       sstate.active.nextToggle = getTime() + ((sstate.active.item.count == 1) and parameter.pulse.long or parameter.pulse.duration);
-      lib.sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);      
+      lib.sendValue(sstate.active.item.module + gVarOffset, parameter.pulseValue[sstate.active.item.state]);      
       sstate.state = sstate.states.pulse;
       sstate.active.on = true;
     elseif (sstate.state == sstate.states.pulse) then
       if (getTime() > sstate.active.nextToggle) then
         if (sstate.active.on) then
-          lib.sendValue(sstate.active.item.module, parameter.pulseValue[parameter.neutral]);
+          lib.sendValue(sstate.active.item.module + gVarOffset, parameter.pulseValue[parameter.neutral]);
           sstate.active.on = false;
           sstate.active.nextToggle = sstate.active.nextToggle + parameter.pulse.pause;
           if (sstate.active.item.count == sstate.active.pulseCount) then
@@ -130,19 +121,19 @@ local function background()
           end
         else 
           sstate.active.pulseCount = sstate.active.pulseCount + 1;
-          lib.sendValue(sstate.active.item.module, parameter.pulseValue[sstate.active.item.state]);
+          lib.sendValue(sstate.active.item.module + gVarOffset, parameter.pulseValue[sstate.active.item.state]);
           sstate.active.on = true;
           sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.item.count > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
         end
       end
     end
   elseif (mode == 1) then
-    lib.sendShortCuts(menu);
+    lib.sendShortCuts(menu, gVar);
   end 
 end
 
 local function toggle(count, state, module)
-  print("toggle", count, state, module);
+--  print("toggle", count, state, module);
   local e = {count = count, state = state, module = module};
   queue:push(e);
 end
@@ -164,7 +155,7 @@ local function select(item, menu)
   elseif (mode == 1) then
     print("sel: ", item, item.name, item.state, menu.state.activeCol);
     item.state = menu.state.activeCol;
-    lib.sendValue(1, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
+    lib.sendValue(gVar, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
   end
 end
 
@@ -187,6 +178,12 @@ end
 
 local function init(options)
   lib = loadfile("/SCRIPTS/WM/wmlib.lua")();
+  local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
+
+  if (cfg) then
+    gVar = cfg.switchGVar;
+    gVarOffset = cfg.offsetGVar;
+  end
 
   local cfgName = nil;
   if (options) then

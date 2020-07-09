@@ -18,6 +18,8 @@
 
 local name = "Default";
 
+local gVariable = 5;
+
 local menu = {
   title = "WM MultiSwitch 0.4",
 
@@ -69,5 +71,4 @@ local menu = {
   }
 }   
 
-
-return {name = name, menu = menu};
+return {name = name, menu = menu, gVar = gVariable};

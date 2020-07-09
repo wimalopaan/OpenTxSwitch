@@ -16,23 +16,7 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
 
-local input = {}
-
-local output = { "encsb" }
-
-local gvar = 5; -- fallback
-
-local function init() 
-  cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
-  if (cfg) then
-    gvar = cfg.switchGVar;
-  end
-end
-
-local function run()
-  local x = model.getGlobalVariable(gvar, 0);
-  x = x + 0.5;
-  return (x * 1024) / 1638;
-end
-
-return {output=output, input=input, run=run, init=init}
+return {
+  switchGVar = 5, -- gVar for use with digital wm-switches
+  offsetGVar = 5, -- gVars to use tiptip switches (each has to use its own channel), starting from (offsetGVar + 1)
+  }
