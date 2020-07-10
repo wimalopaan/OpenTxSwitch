@@ -277,10 +277,9 @@ local function update(pie, options)
   pie.options = options;
 end
 
-function refresh(pie)
+local function refresh(pie)
   background();
   run(nil, pie);
 end
-
 
 return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh}

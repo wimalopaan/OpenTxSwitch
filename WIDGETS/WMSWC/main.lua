@@ -101,7 +101,7 @@ local function selectFollow()
     followHasRun = true;
     lastSelection.time = getTime();
     lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
- --   print("selFollow");
+    --   print("selFollow");
   end
 end
 
@@ -195,8 +195,18 @@ local function update(pie, options)
   pie.options = options;
 end
 
-function refresh(pie)
+local lastVisible = getTime();
+
+local function background()
+  if ((getTime() - lastVisible) > 30) then
+    lastSelection.item = nil;
+    lastSelection.col = 0;
+  end
+end
+
+local function refresh(pie)
+  lastVisible = getTime();
   run(nil, pie);
 end
 
-return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh}
+return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background}
