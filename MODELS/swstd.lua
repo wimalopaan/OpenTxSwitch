@@ -60,8 +60,8 @@ local menu = {
     },
     {
       items = {
-        {name = "Ufn A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
-        {name = "Ufn B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 3}},
+        {name = "Ufn A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = "se", count = 1, offState = 1, module = 3}},
+        {name = "Ufn B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = "sg", count = 2, offState = 1, module = 3}},
         {name = "Ufn C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 3}},
         {name = "Ufn D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 3}},
         {name = "Ufn E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 3}},
