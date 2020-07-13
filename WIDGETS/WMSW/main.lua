@@ -96,12 +96,26 @@ function queue:size()
 end
 
 local function sendShortCuts() 
-  for i,s in ipairs(menu.shortCuts) do
-    local ns = lib.switchState(s.switch);
+  for name,s in pairs(menu.shortCuts) do
+    local ns = lib.switchState(name);
     if not (s.last == ns) then
       s.item.state = ns;
       s.last = ns;
       queue:push(s.item);
+    end
+  end
+  for name,l in pairs(menu.overlays) do
+--    print(name);
+    local item = l.pagelist[menu.state.activePage];
+    if (item) then
+--      print(item.name);
+      local ns = lib.switchState(name);
+      if not (l.last == ns) then
+        item.state = ns;
+        l.last = ns;
+        queue:push(item);
+--        print(item.name);
+      end
     end
   end
 end

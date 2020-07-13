@@ -57,6 +57,18 @@ local function scaleParameterValue(v)
   return math.floor(s);
 end
 
+local function findSwitch(menu, name) 
+  local list = {};
+  for i,p in ipairs(menu.pages) do
+    for k,item in ipairs(p.items) do
+      if (item.data.switch and (item.data.switch == name)) then
+        list[p] = item;
+      end
+    end
+  end
+  return list;
+end
+
 local function initMenu(menu, select, version)
   if (version) then
     menu.title = menu.title .. version;
@@ -109,11 +121,36 @@ local function initMenu(menu, select, version)
   for i,p in ipairs(menu.pages) do
     for k, item in ipairs(p.items) do
       if (item.data.switch) then
-        menu.shortCuts[#menu.shortCuts + 1] = {item = item, switch = item.data.switch, last = switchState(item.data.switch)};
+        menu.shortCuts[item.data.switch] = {item = item, last = switchState(item.data.switch)};
         item.name = item.name .. "/" .. item.data.switch;
       end
     end
   end
+
+  local usedSwitches = {};
+  menu.overlays = {};
+  for i,p in ipairs(menu.pages) do
+    for k,item in ipairs(p.items) do
+      if (item.data.switch) then
+        if not (usedSwitches[item.data.switch]) then
+          usedSwitches[item.data.switch] = 1;
+        else
+          usedSwitches[item.data.switch] = usedSwitches[item.data.switch] + 1;
+        end
+      end
+    end
+  end
+  for s,n in pairs(usedSwitches) do
+    if (n > 1) then
+      menu.shortCuts[s] = nil;
+      local list = findSwitch(menu, s);
+      menu.overlays[s] = {pagelist = list, last = 0};
+      for p,item in pairs(list) do 
+        item.name = item.name .. "!";
+      end
+    end
+  end
+
 end
 
 local function displayFooter(pie, text)
