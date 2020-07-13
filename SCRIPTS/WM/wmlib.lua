@@ -71,7 +71,7 @@ local function initMenu(menu, select, version)
     menu.rsID = rsFI.id;
   end
 
-  local msFI = getFieldInfo(menu.menuFastSwitch);
+  local msFI = getFieldInfo(menu.pageSwitch);
   if (msFI) then
     menu.msFI= msFI.id;
   end

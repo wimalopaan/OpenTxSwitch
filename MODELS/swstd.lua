@@ -28,7 +28,7 @@ local menu = {
 
   parameterDial = "s1",
   
-  menuFastSwitch = "6pos";
+  pageSwitch = "6pos";
 
   state = {
     activeRow = 1,

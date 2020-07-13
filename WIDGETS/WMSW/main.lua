@@ -26,7 +26,7 @@ local menu = {
   scrollUpDn = "ls", -- speedDials: direct navigating
   scrollLR = "rs",
 
-  menuFastSwitch = "6p";
+  pageSwitch = "6p";
 
   state = {
     activeRow = 1,
