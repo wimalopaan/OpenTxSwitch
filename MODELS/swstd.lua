@@ -27,6 +27,8 @@ local menu = {
   scrollLR = "rs",
 
   parameterDial = "s1",
+  
+  menuFastSwitch = "6pos";
 
   state = {
     activeRow = 1,

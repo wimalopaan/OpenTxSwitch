@@ -71,6 +71,11 @@ local function initMenu(menu, select, version)
     menu.rsID = rsFI.id;
   end
 
+  local msFI = getFieldInfo(menu.menuFastSwitch);
+  if (msFI) then
+    menu.msFI= msFI.id;
+  end
+
   menu.state.activeRow = 0;
   menu.state.activeCol = 0;
   menu.state.activePage = menu.pages[1];
@@ -262,7 +267,8 @@ local buttons = {
   lastp = 0,
   lastl = 0,
   lastr = 0,
-  lasts = 0
+  lasts = 0,
+  lastm = 0
 }
 
 local function readButtons(pie)  
@@ -336,20 +342,39 @@ local function inputToMenuCol(name, menu)
 end
 
 local function readSpeedDials(lsID, rsID, pie, menu)
-  local lv = 0;
-  if (menu.lsID > 0) then
+  if (menu.lsID) then
+    local lv = 0;
     lv = inputToMenuLine(menu.lsID, menu);
     if not (lv == buttons.lastl) then
       menu.state.activeRow = lv;
       buttons.lastl = lv;
     end
   end
-  local rv= 0;
-  if (menu.rsID > 0) then
+  if (menu.rsID) then
+    local rv = 0;
     rv = inputToMenuCol(menu.rsID, menu);
     if not (rv == buttons.lastr) then
       menu.state.activeCol = rv;
       buttons.lastr = rv;
+    end
+  end
+
+  if (menu.msFI) then
+    local ms = 0;
+    ms = getValue(menu.msFI);
+    if not (ms == buttons.lastm) then
+      buttons.lastm = ms;
+      local s = 1;
+      for i = 0,5 do
+        if (ms <= (-1024 + i * (2048 / 5) + 0.5)) then
+          s = i + 1;
+          break;
+        end
+      end
+      --print(s);
+      if (s <= #menu.pages) then
+        menu.state.activePage = menu.pages[s];
+      end
     end
   end
 end
