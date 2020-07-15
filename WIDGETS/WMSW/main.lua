@@ -270,6 +270,12 @@ local function init(options)
     menu = config.menu;
   end
 
+  for i,p in ipairs(menu.pages) do
+    if (p.config) then
+      menu.pages[i] = nil;
+    end
+  end
+
   lib.initMenu(menu, select, cfg.version, true);
 end
 

@@ -41,7 +41,9 @@ local menu = {
 
 -----
 
-local parameters = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "MPX"};
+local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "Min", "Max"}, values = {0, 1, 2, 3, 4, 5, 6, 12, 13}};
+
+local globalParameters = {names = {"Res", "MPX0", "MPX1", "MPX2", "MPX3", "MPX4"}, values = {14, 7, 8, 9, 10, 11}};
 
 local defaultFilename = "/MODELS/swstd.lua";
 local cfgName = nil;
@@ -62,7 +64,9 @@ local function pushValue()
   if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
     local v = lib.scaleParameterValue(getValue(menu.parameterDial));
 --    print("push: ", v);
-    lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
+--    lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
+    local pv = lastSelection.item.stateValues[lastSelection.col];
+    lib.sendValue(gVar, lib.encodeParameter(pv, v));
   end
 end
 
@@ -165,8 +169,16 @@ local function init(options)
   lib.initMenu(menu, select, cfg.version);
 
   for i,p in ipairs(menu.pages) do
-    for k,item in ipairs(p.items) do
-      item.states = parameters;
+    if (p.config) then
+      for k,item in ipairs(p.items) do
+        item.states = globalParameters.names;
+        item.stateValues = globalParameters.values;
+      end
+    else
+      for k,item in ipairs(p.items) do
+        item.states = parameters.names;
+        item.stateValues = parameters.values;
+      end
     end
   end
 end

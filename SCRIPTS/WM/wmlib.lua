@@ -45,14 +45,15 @@ local function encodeFunction(address, number, state)
   -- address / number starts at 1 (lua counting)
   -- state is unmodified
 --  print("encodeF:", address, number, state);
-  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
+--  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
+  return (64 * (address - 1) + 8 * (number - 1) + state) * 2 - 1024;
 end
 
 local function encodeParameter(parameter, value)
-  -- parameter starts at 1 (lua counting)
+  -- parameter starts at 0 (as in protocol)
   -- value is unmodified
 --  print("encodeP:", parameter, value);
-  return (512 + (parameter - 1) * 32 + value + 0.5) * 2 - 1024;
+  return (512 + parameter * 32 + value + 0.5) * 2 - 1024;
 end
 
 local function sendValue(gvar, value)

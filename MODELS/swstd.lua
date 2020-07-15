@@ -66,7 +66,7 @@ local menu = {
         {name = "Ufn H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 3}},
       }
     },
-    { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4)
+    { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) ... Address(8)
       items = {
         {name = "Foo A", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = "se", count = 1, offState = 1, module = 4}},
         {name = "Foo B", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 4}},
@@ -75,7 +75,20 @@ local menu = {
         {name = "Foo E", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 4}},
         {name = "Foo F", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 4}},
         {name = "Foo G", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 4}},
-        {name = "Foo H", states = {"aus", "ein1 ", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 4}},
+        {name = "Foo H", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 4}},
+      }
+    },
+    { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) global module configuration
+      config = true;
+      items = {
+        {name = "Mod@1", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
+        {name = "Mod@2", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
+        {name = "Mod@3", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 3}},
+        {name = "Mod@4", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 4}},
+        {name = "Mod@5", states = {}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 5}},
+        {name = "Mod@6", states = {}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 6}},
+        {name = "Mod@7", states = {}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 7}},
+        {name = "Mod@8", states = {}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 8}},
       }
     }
   }
