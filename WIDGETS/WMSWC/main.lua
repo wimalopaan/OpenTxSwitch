@@ -41,7 +41,7 @@ local menu = {
 
 -----
 
-local parameters = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "Proto"};
+local parameters = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "MPX"};
 
 local defaultFilename = "/MODELS/swstd.lua";
 local cfgName = nil;
