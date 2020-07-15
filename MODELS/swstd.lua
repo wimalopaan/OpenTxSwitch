@@ -69,13 +69,13 @@ local menu = {
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4)
       items = {
         {name = "Foo A", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = "se", count = 1, offState = 1, module = 4}},
-        {name = "Foo B", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 4}},
-        {name = "Foo C", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 4}},
-        {name = "Foo D", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 4}},
-        {name = "Foo E", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 4}},
-        {name = "Foo F", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 4}},
-        {name = "Foo G", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 4}},
-        {name = "Foo H", states = {"aus", "ein", "blink1"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 4}},
+        {name = "Foo B", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 4}},
+        {name = "Foo C", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 4}},
+        {name = "Foo D", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 4}},
+        {name = "Foo E", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 4}},
+        {name = "Foo F", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 4}},
+        {name = "Foo G", states = {"aus", "ein 1", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 4}},
+        {name = "Foo H", states = {"aus", "ein1 ", "ein 2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 4}},
       }
     }
   }
