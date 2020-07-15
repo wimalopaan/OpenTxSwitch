@@ -74,21 +74,21 @@ sstate.switches = nil;
 
 -------
 
-local queue = {first = 0, last = -1};
+local queue = {};
 
-function queue:push (item)
-  self.last = self.last + 1;
-  self[self.last] = item;
-end
-function queue:pop()
-  local item = self[self.first];
-  self[self.first] = nil;
-  self.first = self.first + 1;
-  return item;
-end
-function queue:size()
-  return self.last - self.first + 1;
-end
+--function queue:push (item)
+--  self.last = self.last + 1;
+--  self[self.last] = item;
+--end
+--function queue:pop()
+--  local item = self[self.first];
+--  self[self.first] = nil;
+--  self.first = self.first + 1;
+--  return item;
+--end
+--function queue:size()
+--  return self.last - self.first + 1;
+--end
 
 local function sendShortCuts() 
   for name,s in pairs(menu.shortCuts) do
@@ -229,6 +229,8 @@ end
 local function init(options)
   lib = loadfile("/SCRIPTS/WM/wmlib.lua")();
   local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
+
+  queue = lib.Class.Queue.new();
 
   if (cfg) then
     gVar = cfg.switchGVar;
