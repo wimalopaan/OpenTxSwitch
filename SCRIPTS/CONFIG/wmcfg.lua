@@ -7,6 +7,10 @@
 -- To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ 
 -- or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+-- IMPORTANT
+-- Please note that the above license also covers the transfer protocol used and the encoding scheme and 
+-- all further principals of tranferring state and other information.
+
 return {
   version = "0.8",
   switchGVar = 5, -- gVar for use with digital wm-switches

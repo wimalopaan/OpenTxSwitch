@@ -7,12 +7,50 @@
 -- To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ 
 -- or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+-- IMPORTANT
+-- Please note that the above license also covers the transfer protocol used and the encoding scheme and 
+-- all further principals of tranferring state and other information.
+
+local Class = {};
+
+function Class.new(prototype)
+  local o = {};
+  setmetatable(o, prototype);
+  prototype.__index = prototype;
+  return o;
+end
+
+local Queue = {first = 0, last = -1};
+
+function Queue:new()
+  return Class.new(Queue);
+end
+function Queue:push (item)
+  self.last = self.last + 1;
+  self[self.last] = item;
+end
+function Queue:pop()
+  local item = self[self.first];
+  self[self.first] = nil;
+  self.first = self.first + 1;
+  return item;
+end
+function Queue:size()
+  return self.last - self.first + 1;
+end
+
+Class.Queue = Queue;
+
 local function encodeFunction(address, number, state)
+  -- address / number starts at 1 (lua counting)
+  -- state is unmodified
 --  print("encodeF:", address, number, state);
   return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
 end
 
 local function encodeParameter(parameter, value)
+  -- parameter starts at 1 (lua counting)
+  -- value is unmodified
 --  print("encodeP:", parameter, value);
   return (512 + (parameter - 1) * 32 + value + 0.5) * 2 - 1024;
 end
@@ -60,9 +98,9 @@ local function findSwitch(menu, name)
   return list;
 end
 
-local function initMenu(menu, select, version)
+local function initMenu(menu, select, version, showShortCuts)
   if (version) then
-    menu.title = menu.title .. version;
+    menu.title = menu.title .. " " .. version;
   end
   local lsFI = getFieldInfo(menu.scrollUpDn);
   if (lsFI) then
@@ -113,7 +151,9 @@ local function initMenu(menu, select, version)
     for k, item in ipairs(p.items) do
       if (item.data.switch) then
         menu.shortCuts[item.data.switch] = {item = item, last = switchState(item.data.switch)};
-        item.name = item.name .. "/" .. item.data.switch;
+        if (showShortCuts) then
+          item.name = item.name .. "/" .. item.data.switch;
+        end
       end
     end
   end
@@ -136,8 +176,10 @@ local function initMenu(menu, select, version)
       menu.shortCuts[s] = nil;
       local list = findSwitch(menu, s);
       menu.overlays[s] = {pagelist = list, last = 0};
-      for p,item in pairs(list) do 
-        item.name = item.name .. "!";
+      if (showShortCuts) then
+        for p,item in pairs(list) do 
+          item.name = item.name .. "!";
+        end
       end
     end
   end
@@ -424,4 +466,5 @@ end
 return {initMenu = initMenu, displayMenu = displayMenu, findInputId = findInputId, displayInfo = displayInfo,
   encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
   processEvents = processEvents,
-  readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, sendShortCuts = sendShortCuts, broadcastReset = broadcastReset};
+  readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, sendShortCuts = sendShortCuts, broadcastReset = broadcastReset,
+  Class = Class};

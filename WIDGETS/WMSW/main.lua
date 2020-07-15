@@ -7,6 +7,10 @@
 -- To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ 
 -- or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+-- IMPORTANT
+-- Please note that the above license also covers the transfer protocol used and the encoding scheme and 
+-- all further principals of tranferring state and other information.
+
 -- define fallback menu
 
 local mode = 1; -- 0: tiptip; 1: digital-idempotential
@@ -264,7 +268,7 @@ local function init(options)
     menu = config.menu;
   end
 
-  lib.initMenu(menu, select, cfg.version);
+  lib.initMenu(menu, select, cfg.version, true);
 end
 
 local options = {
