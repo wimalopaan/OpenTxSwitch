@@ -79,7 +79,7 @@ local menu = {
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) global module configuration
-      config = true;
+      config = true; -- enables globalParameters
       items = {
         {name = "Mod@1", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
         {name = "Mod@2", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 2}},
