@@ -25,8 +25,11 @@ end
 
 local function run()
   local x = model.getGlobalVariable(gvar, 0);
-  x = x + 0.5;
-  return (x * 1024) / 1638;
+--  local c = model.getGlobalVariable(gvar + 1, 0); -- sbus rounding mess correction values
+--  local o = (x * 1024) / 1638 + c / 10 + 0.5;
+  local o = (x * 1024) / 1638 + 0.5;
+--  print(x, c, o);
+  return o;
 end
 
 return {output=output, input=input, run=run, init=init}

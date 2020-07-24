@@ -41,6 +41,10 @@ end
 
 Class.Queue = Queue;
 
+-- sbus rounding mess: need some correction values (gvars only ints, so multiply with 10)
+-- local lut = {0, 20, 20, 10, 20, 20, 20, 10, 20, 20, 20, 10, 20, 20, 10, 5, 10, 20, 20, 10, 20, 20, 20, 10, 20, 20, 20, 10, 20, 20, 10, 5}
+-- local sbuscorr = 0;
+
 local function encodeFunction(address, number, state)
   -- address / number starts at 1 (lua counting)
   -- state is unmodified
@@ -49,11 +53,29 @@ local function encodeFunction(address, number, state)
   return (64 * (address - 1) + 8 * (number - 1) + state) * 2 - 1024;
 end
 
+-- sbus uses only half the states (0...3)
+local function encodeFunctionSbus(address, number, state)
+  -- address / number starts at 1 (lua counting)
+  -- state is unmodified
+--  print("encodeF:", address, number, state);
+--  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
+  return (64 * (address - 1) + 8 * (number - 1) +  2 * state) * 2 - 1024;
+end
+
+
 local function encodeParameter(parameter, value)
   -- parameter starts at 0 (as in protocol)
   -- value is unmodified
 --  print("encodeP:", parameter, value);
-  return (512 + parameter * 32 + value + 0.5) * 2 - 1024;
+  return (512 + parameter * 32 + value) * 2 - 1024;
+end
+
+-- sbus uses only half the values (0...15)
+local function encodeParameterSbus(parameter, value)
+  -- parameter starts at 0 (as in protocol)
+  -- value is unmodified
+--  print("encodeP:", parameter, value);
+  return (512 + parameter * 32 + 2 * value) * 2 - 1024;
 end
 
 local function sendValue(gvar, value)
@@ -63,7 +85,7 @@ end
 
 local function broadcastReset(gvar) 
 --  print("bcast reset");
-  sendValue(gvar, encodeParameter(16, 31)); -- broadcast, turn off all outputs
+  sendValue(gvar, encodeParameter(15, 31)); -- broadcast, turn off all outputs
 end 
 
 local function switchState(s) 
@@ -81,6 +103,17 @@ local function scaleParameterValue(v)
   local s = ((v + 1024) * 32) / 2048;
   if (s > 31) then
     s = 31;
+  elseif (s < 0) then
+    s = 0;
+  end
+  return math.floor(s);
+end
+
+-- use half the range
+local function scaleParameterValueSbus(v)
+  local s = ((v + 1024) * 16) / 2048;
+  if (s > 15) then
+    s = 15;
   elseif (s < 0) then
     s = 0;
   end
@@ -205,7 +238,8 @@ local function displayMenu(menu, event, pie, config)
   displayHeader(pie, menu.state.activePage.desc);
 
   if (config) then
-    displayFooter(pie, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. config.cfgName);
+    local sb = (config.useSbus > 0) and "sbus" or "ibus" 
+    displayFooter(pie, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. config.cfgName .. " T: " .. sb);
   end
   -- lcd.clear()
   local n = 0;
@@ -468,4 +502,5 @@ return {initMenu = initMenu, displayMenu = displayMenu, findInputId = findInputI
   encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
   processEvents = processEvents,
   readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, sendShortCuts = sendShortCuts, broadcastReset = broadcastReset,
+  encodeFunctionSbus = encodeFunctionSbus, encodeParameterSbus = encodeParameterSbus, scaleParameterValueSbus = scaleParameterValueSbus,
   Class = Class};

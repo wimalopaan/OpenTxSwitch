@@ -64,11 +64,20 @@ local followHasRun = false;
 local function pushValue()
   local dt = getTime() - lastSelection.time;
   if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
-    local v = lib.scaleParameterValue(getValue(menu.parameterDial));
+    local v = 0;
+    if (config.useSbus > 0) then
+      v = lib.scaleParameterValueSbus(getValue(menu.parameterDial));
+    else
+      v = lib.scaleParameterValue(getValue(menu.parameterDial));
+    end
 --    print("push: ", v);
 --    lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
     local pv = lastSelection.item.stateValues[lastSelection.col];
-    lib.sendValue(gVar, lib.encodeParameter(pv, v));
+    if (config.useSbus > 0) then
+      lib.sendValue(gVar, lib.encodeParameterSbus(pv, v));
+    else
+      lib.sendValue(gVar, lib.encodeParameter(pv, v));
+    end
   end
 end
 
@@ -100,7 +109,11 @@ local function selectFollow()
   if (lastSelection.item and (dt > 10) and not followHasRun) then
     followHasRun = true;
     lastSelection.time = getTime();
-    lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
+    if (config.useSbus > 0) then
+      lib.sendValue(gVar, lib.encodeFunctionSbus(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
+    else
+      lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
+    end
     --   print("selFollow");
   end
 end
@@ -111,7 +124,12 @@ end
 
 local function printParameter(pie)
   local r = getValue(menu.parameterDial);
-  local v = lib.scaleParameterValue(r);
+  local v = 0;
+  if (config.useSbus > 0) then
+    v = lib.scaleParameterValueSbus(r);
+  else
+    v = lib.scaleParameterValue(r);
+  end
   lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + 16, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), SMLSIZE);
 end
 
@@ -168,7 +186,7 @@ local function init(options)
 
   menu.title = menu.title.. " - Config";
 
-  lib.initMenu(menu, select, cfg.version);
+  lib.initMenu(menu, select, cfg.version, false);
 
   for i,p in ipairs(menu.pages) do
     if (p.config) then

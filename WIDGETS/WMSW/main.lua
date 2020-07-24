@@ -162,14 +162,22 @@ local function background()
         lastbg = t;
         lastbg1 = t;
         local i = queue:pop();
-        lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
+        if (config.useSbus > 0) then
+          lib.sendValue(gVar, lib.encodeFunctionSbus(i.data.module, i.data.count, i.state)); 
+        else
+          lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
+        end
       end
     else
       if ((t - lastbg) > stateTimeout) then
         lastbg = t;
 --        print("state", cycle);
         local i = menu.allItems[cycle];
-        lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
+        if (config.useSbus > 0) then
+          lib.sendValue(gVar, lib.encodeFunctionSbus(i.data.module, i.data.count, i.state)); 
+        else
+          lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
+        end
         cycle = cycle + 1;
         if (cycle > #menu.allItems) then
           cycle = 1;

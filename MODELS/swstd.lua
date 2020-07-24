@@ -14,6 +14,8 @@ local name = "Default";
 
 local gVariable = 5;
 
+local useSbus = 1; -- only 4 states, only 16 parameter values
+
 local menu = {
   title = "WM MultiSwitch",
 
@@ -94,4 +96,4 @@ local menu = {
   }
 }   
 
-return {name = name, menu = menu, gVar = gVariable};
+return {name = name, menu = menu, gVar = gVariable, useSbus = useSbus};
