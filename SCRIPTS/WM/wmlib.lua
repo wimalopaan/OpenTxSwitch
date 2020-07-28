@@ -50,7 +50,7 @@ local function encodeFunction(address, number, state)
   -- state is unmodified
 --  print("encodeF:", address, number, state);
 --  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
-  return (64 * (address - 1) + 8 * (number - 1) + state) * 2 - 1024;
+  return (64 * (address - 1) + 8 * (number - 1) + (state - 1)) * 2 - 1024;
 end
 
 -- sbus uses only half the states (0...3)
@@ -59,7 +59,7 @@ local function encodeFunctionSbus(address, number, state)
   -- state is unmodified
 --  print("encodeF:", address, number, state);
 --  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
-  return (64 * (address - 1) + 8 * (number - 1) +  2 * state) * 2 - 1024;
+  return (64 * (address - 1) + 8 * (number - 1) +  2 * (state - 1)) * 2 - 1024;
 end
 
 
