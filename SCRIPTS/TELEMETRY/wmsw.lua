@@ -11,9 +11,30 @@
 -- Please note that the above license also covers the transfer protocol used and the encoding scheme and 
 -- all further principals of tranferring state and other information.
 
-return {
-  version = "0.95",
-  switchGVar = 5, -- gVar for use with digital wm-switches
-  offsetGVar = 5, -- gVars to use tiptip switches (each has to use its own channel), starting from (offsetGVar + 1)
-  stateTimeout = 10, -- 100ms for each state to propagate
-}
+
+local pie = {};
+pie.zone = {};
+pie.zone.x = 0;
+pie.zone.y = 0;
+pie.zone.w = LCD_W;
+pie.zone.h = LCD_H;
+pie.zone.fh = 8;
+pie.zone.y_offset = 8;
+pie.zone.y_poffset = 0;
+
+local widget = nil;
+
+local function run_telemetry(event)
+  widget.run(event, pie);
+end
+
+local function init_telemetry()
+  widget = loadfile("/WIDGETS/WMSW/main.lua")();
+  widget.init(nil);
+end
+
+local function background_telemetry()
+  widget.background();
+end
+
+return {run=run_telemetry, init=init_telemetry, background=background_telemetry}

@@ -221,7 +221,8 @@ local function initMenu(menu, select, version, showShortCuts)
 end
 
 local function displayFooter(pie, text)
-  lcd.drawText(pie.zone.x, pie.zone.y + 32 + 9 * 16, text, SMLSIZE);
+--  lcd.drawText(pie.zone.x, pie.zone.y + pie.zone.y_offset + 9 * pie.zone.fh, text, SMLSIZE);
+  lcd.drawText(pie.zone.x, pie.zone.y + pie.zone.h - pie.zone.fh, text, SMLSIZE);
 end
 
 local function displayHeader(pie, text)
@@ -229,31 +230,33 @@ local function displayHeader(pie, text)
 end
 
 local function displayInfo(pie, text)
-  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + 16, text, SMLSIZE);
+  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + pie.zone.fh, text, SMLSIZE);
 end
 
 local function displayMenu(menu, event, pie, config)  
-  lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
-
-  displayHeader(pie, menu.state.activePage.desc);
+  if (lcd.drawScreenTitle) then
+    lcd.clear()
+    lcd.drawScreenTitle(menu.title, menu.state.activePage.number, #menu.pages);
+  else  
+    lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
+    displayHeader(pie, menu.state.activePage.desc);
+  end
 
   if (config) then
     local sb = (config.useSbus > 0) and "sbus" or "ibus" 
     displayFooter(pie, "Cfg: " .. config.name .. " Mdl: " .. model.getInfo().name .. " F: " .. config.cfgName .. " T: " .. sb);
   end
-  -- lcd.clear()
   local n = 0;
   for i,pa in ipairs(menu.pages) do
     if (pa == menu.state.activePage) then 
       n = i; 
     end
   end
---    lcd.drawScreenTitle(menu.title, n, #menu.pages);
   local p = menu.state.activePage;
 
   for row, opt in ipairs(p.items) do
     local x = pie.zone.x;
-    local y = pie.zone.y + 32 + (row - 1) * 16;
+    local y = pie.zone.y + pie.zone.y_offset + (row - 1) * pie.zone.fh;
     local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
     lcd.drawText(x, y, opt.name, attr);
     if opt.states then

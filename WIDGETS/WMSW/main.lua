@@ -46,6 +46,8 @@ local menu = {
 }   
 
 local defaultFilename = "/MODELS/swstd.lua";
+local defaultFilenameM = "/MODELS/swstdm.lua";
+local defaultFilenameS = "/MODELS/swstds.lua";
 local config = nil;
 local lib = nil;
 local gVar = 5; -- fallback for digital switches
@@ -268,6 +270,13 @@ local function init(options)
     end
   end
   if not config then
+    if (LCD_W <= 212) then
+      defaultFilename = defaultFilenameM;
+    end
+    if (LCD_W <= 128) then
+      defaultFilename = defaultFilenameS;
+    end
+
     cfgName = defaultFilename;
     config = loadfile(defaultFilename)();
   end
@@ -296,6 +305,8 @@ local options = {
 
 local function create(zone, options)
   init(options);
+  zone.fh = 16;
+  zone.y_offset = 32;
   local pie = { zone=zone, options=options};
   return pie;
 end
@@ -309,4 +320,4 @@ local function refresh(pie)
   run(nil, pie);
 end
 
-return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh}
+return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run}
