@@ -46,8 +46,8 @@ local menu = {
 }   
 
 local defaultFilename = "/MODELS/swstd.lua";
-local defaultFilenameM = "/MODELS/swstdm.lua";
-local defaultFilenameS = "/MODELS/swstds.lua";
+local defaultFilenameM = "/MODELS/swstdx.lua";
+local defaultFilenameS = "/MODELS/swstdx.lua";
 local config = nil;
 local lib = nil;
 local gVar = 5; -- fallback for digital switches
@@ -276,7 +276,6 @@ local function init(options)
     if (LCD_W <= 128) then
       defaultFilename = defaultFilenameS;
     end
-
     cfgName = defaultFilename;
     config = loadfile(defaultFilename)();
   end
@@ -294,6 +293,8 @@ local function init(options)
   end
 
   lib.initMenu(menu, select, cfg.version, true);
+  
+  return lib, menu, config;
 end
 
 local options = {

@@ -48,8 +48,8 @@ local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThr
 local globalParameters = {names = {"L/Res", "MPX0", "MPX1", "MPX2", "MPX3", "MPX4"}, values = {14, 7, 8, 9, 10, 11}};
 
 local defaultFilename = "/MODELS/swstd.lua";
-local defaultFilenameM = "/MODELS/swstdm.lua";
-local defaultFilenameS = "/MODELS/swstds.lua";
+local defaultFilenameM = "/MODELS/swstdx.lua";
+local defaultFilenameS = "/MODELS/swstdx.lua";
 local cfgName = nil;
 local config = nil;
 local lib = nil;
@@ -116,7 +116,7 @@ local function selectFollow()
     else
       lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
     end
-    --   print("selFollow");
+--    print("selFollow");
   end
 end
 
@@ -209,6 +209,8 @@ local function init(options)
       end
     end
   end
+
+  return lib, menu, config;
 end
 
 local options = {
@@ -246,4 +248,4 @@ local function refresh(pie)
   run(nil, pie);
 end
 
-return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background, init=init, run=run}
+return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background, init=init, run=run, printParameter=printParameter, selectFollow=selectFollow, pushValue=pushValue}
