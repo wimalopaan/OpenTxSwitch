@@ -167,11 +167,13 @@ local function initMenu(menu, select, version, showShortCuts)
     menu.pages[p].prev = menu.pages[(( p + #menu.pages - 2) % #menu.pages) + 1]; 
   end
 
-  for i,p in ipairs(menu.pages) do
-    for k, item in ipairs(p.items) do
-      item.cb = select;
-    end
-  end
+  menu.cb = select;
+  
+--  for i,p in ipairs(menu.pages) do
+--    for k, item in ipairs(p.items) do
+--      item.cb = select;
+--    end
+--  end
 
   menu.allItems = {};
   for i,p in ipairs(menu.pages) do
@@ -340,10 +342,7 @@ local function processEvents(menu, event, pie)
   elseif event == EVT_VIRTUAL_ENTER then
     if (menu.state.activeRow > 0) then
 --      print("X: ", p.items[menu.state.activeRow]);
-      p.items[menu.state.activeRow].cb(p.items[menu.state.activeRow], menu);
---      if p.items[menu.state.activeRow].cb then
---        p.items[menu.state.activeRow].cb(menu);
---      end
+       menu.cb(p.items[menu.state.activeRow], menu);
     end
   elseif event == EVT_VIRTUAL_EXIT then
     menu.state.activeRow = 0;

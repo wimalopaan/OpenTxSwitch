@@ -26,14 +26,14 @@ local menu = {
     {
       items = {
         -- do NOT use states
-        {name = "Fun A1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}},
-        {name = "Fun B1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 2, offState = 1, module = 1}},
-        {name = "Fun C1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
-        {name = "Fun D1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
-        {name = "Fun E1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
-        {name = "Fun F1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
-        {name = "Fun G1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
-        {name = "Fun H1", states = {""}, state = 0, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
+        {name = "Fun A1", states = {""}, state = 0, data = {switch = nil, count = 1, module = 1}},
+        {name = "Fun B1", states = {""}, state = 0, data = {switch = nil, count = 2, module = 1}},
+        {name = "Fun C1", states = {""}, state = 0, data = {switch = nil, count = 3, module = 1}},
+        {name = "Fun D1", states = {""}, state = 0, data = {switch = nil, count = 4, module = 1}},
+        {name = "Fun E1", states = {""}, state = 0, data = {switch = nil, count = 5, module = 1}},
+        {name = "Fun F1", states = {""}, state = 0, data = {switch = nil, count = 6, module = 1}},
+        {name = "Fun G1", states = {""}, state = 0, data = {switch = nil, count = 7, module = 1}},
+        {name = "Fun H1", states = {""}, state = 0, data = {switch = nil, count = 8, module = 1}},
       }
     }
   }
@@ -48,7 +48,7 @@ local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThr
 local globalParameters = {names = {"L/Res", "MPX0", "MPX1", "MPX2", "MPX3", "MPX4"}, values = {14, 7, 8, 9, 10, 11}};
 
 local defaultFilename = "/MODELS/swstd.lua";
-local defaultFilenameM = "/MODELS/swstdx.lua";
+local defaultFilenameM = "/MODELS/swstdm.lua";
 local defaultFilenameS = "/MODELS/swstdx.lua";
 local cfgName = nil;
 local config = nil;

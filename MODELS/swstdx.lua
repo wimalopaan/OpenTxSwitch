@@ -34,18 +34,18 @@ local menu = {
   pages = {
     { -- template for digital multiswitch RC-MultiSwitch-D @ Address(1)
       items = {
-        {name = "Fun A", states = {"aus", "ein", "b1", "b2"}, state = 1, cb = nil, data = {switch = "sa", count = 1, offState = 1, module = 1}},
-        {name = "Fun B", states = {"aus", "ein", "b1", "b2"}, state = 1, cb = nil, data = {switch = "sb", count = 2, offState = 1, module = 1}},
-        {name = "Fun C", states = {"aus", "ein", "b1", "b2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
-        {name = "Fun D", states = {"aus", "ein", "b1", "b2"}, state = 1, cb = nil, data = {switch = "se", count = 4, offState = 1, module = 1}},
-        {name = "Fun E", states = {"aus", "ein", "b1", "b2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
-        {name = "Fun F", states = {"aus", "ein", "b1", "b2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
+        {name = "Fun A", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = "sa", count = 1, module = 1}},
+        {name = "Fun B", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = "sb", count = 2, module = 1}},
+        {name = "Fun C", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = nil, count = 3, module = 1}},
+        {name = "Fun D", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = "se", count = 4, module = 1}},
+        {name = "Fun E", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = nil, count = 5, module = 1}},
+        {name = "Fun F", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = nil, count = 6, module = 1}},
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) global module configuration
       config = true; -- enables globalParameters
       items = {
-        {name = "Mod@1", states = {}, state = 1, cb = nil, data = {switch = nil, count = 1, offState = 1, module = 1}}
+        {name = "Mod@1", states = {}, state = 1, data = {switch = nil, count = 1, module = 1}}
       }
     }
   }
