@@ -23,18 +23,14 @@ pie.zone.y_offset = 8;
 pie.zone.y_poffset = 0;
 
 local widget = nil;
-local lib = nil;
-local menu = nil;
-local config = nil;
 
 local function run_telemetry(event)
-  lib.processEvents(menu, event, pie);
-  lib.displayMenu(menu, event, pie, config);
+   widget.procAndDisplay(event, pie);
 end
 
 local function init_telemetry()
   widget = loadfile("/WIDGETS/WMSW/main.lua")();
-  lib, menu, config = widget.init(nil);
+  widget.init(nil);
 end
 
 local function background_telemetry()

@@ -16,6 +16,8 @@ local gVariable = 5;
 
 local useSbus = 1; -- only 4 states, only 16 parameter values
 
+local gstates = {"aus", "ein", "b1", "b2"}
+
 local menu = {
   title = "WM MultiSwitch",
 
@@ -34,12 +36,12 @@ local menu = {
   pages = {
     { -- template for digital multiswitch RC-MultiSwitch-D @ Address(1)
       items = {
-        {name = "Fun A", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = "sa", count = 1, module = 1}},
-        {name = "Fun B", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = "sb", count = 2, module = 1}},
-        {name = "Fun C", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = nil, count = 3, module = 1}},
-        {name = "Fun D", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = "se", count = 4, module = 1}},
-        {name = "Fun E", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = nil, count = 5, module = 1}},
-        {name = "Fun F", states = {"aus", "ein", "b1", "b2"}, state = 1, data = {switch = nil, count = 6, module = 1}},
+        {name = "Fun A", states = gstates, state = 1, data = {switch = "sa", count = 1, module = 1}},
+        {name = "Fun B", states = gstates, state = 1, data = {switch = "sb", count = 2, module = 1}},
+        {name = "Fun C", states = gstates, state = 1, data = {switch = nil, count = 3, module = 1}},
+        {name = "Fun D", states = gstates, state = 1, data = {switch = "se", count = 4, module = 1}},
+        {name = "Fun E", states = gstates, state = 1, data = {switch = nil, count = 5, module = 1}},
+        {name = "Fun F", states = {"a", "e", "A", "B"}, state = 1, data = {switch = nil, count = 6, module = 1}},
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) global module configuration

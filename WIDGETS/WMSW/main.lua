@@ -53,18 +53,9 @@ local stateTimeout = 10;  --fallback
 
 ----- nothing to setup below this line
 
-local sstate = {}
-
-sstate.states = {idle = 0, start = 1, pulse = 2, deadWait = 3};
-sstate.state  = sstate.states.idle;
-sstate.active = {item= nil,
-		 pulseCount = 0, nextToggle = 0, startTime = getTime(),
-		 on = false};
-sstate.switches = nil;
-
--------
-
 local queue = {};
+
+local encode = nil;
 
 local function sendShortCuts() 
    for name,s in pairs(menu.shortCuts) do
@@ -96,6 +87,7 @@ local lastbg1 = getTime();
 local cycle = 1;
 
 local function background()
+   sendShortCuts();
    local t = getTime();
    if (queue:size() > 0) then
       --      print("q > 0");
@@ -103,36 +95,20 @@ local function background()
 	 lastbg = t;
 	 lastbg1 = t;
 	 local i = queue:pop();
-	 if (config.useSbus > 0) then
-	    lib.sendValue(gVar, lib.encodeFunctionSbus(i.data.module, i.data.count, i.state)); 
-	 else
-	    lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
-	 end
+	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
       end
    else
-      if ((t - lastbg) > stateTimeout) then
-	 lastbg = t;
-	 --        print("state", cycle);
-	 local i = menu.allItems[cycle];
-	 if (config.useSbus > 0) then
-	    lib.sendValue(gVar, lib.encodeFunctionSbus(i.data.module, i.data.count, i.state)); 
-	 else
-	    lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
-	 end
-	 cycle = cycle + 1;
-	 if (cycle > #menu.allItems) then
-	    cycle = 1;
-	 end
-      end
+      -- if ((t - lastbg) > stateTimeout) then
+      -- 	 lastbg = t;
+      -- 	 --        print("state", cycle);
+      -- 	 local i = menu.allItems[cycle];
+      -- 	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
+      -- 	 cycle = cycle + 1;
+      -- 	 if (cycle > #menu.allItems) then
+      -- 	    cycle = 1;
+      -- 	 end
+      -- end
    end
-   sendShortCuts();
-   --    lib.sendShortCuts(menu, gVar);
-end
-
-local function toggle(count, state, module)
-   --  print("toggle", count, state, module);
-   local e = {count = count, state = state, module = module};
-   queue:push(e);
 end
 
 local function select(item, menu)
@@ -142,7 +118,11 @@ local function select(item, menu)
    --    print("sel: ", item, item.name, item.state, menu.state.activeCol);
    item.state = menu.state.activeCol;
    queue:push(item);
-   --    lib.sendValue(gVar, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
+end
+
+local function procAndDisplay(event, pie)
+   lib.processEvents(menu, event, pie);
+   lib.displayMenu(menu, event, pie, config);
 end
 
 local function run(event, pie)
@@ -150,9 +130,7 @@ local function run(event, pie)
       event = lib.readButtons(pie);
    end
    lib.readSpeedDials(lsID, rsID, pie, menu);
-   lib.processEvents(menu, event, pie);
-   lib.displayMenu(menu, event, pie, config);
-
+   procAndDisplay(event, pie);
 end
 
 local function init(options)
@@ -205,6 +183,12 @@ local function init(options)
       menu = config.menu;
    end
 
+   if (config.useSbus > 0) then
+      encode = lib.encodeFunctionSbus;
+   else
+      encode = lib.encodeFunction;
+   end
+   
    for i,p in ipairs(menu.pages) do
       if (p.config) then
 	 menu.pages[i] = nil;
@@ -240,4 +224,4 @@ local function refresh(pie)
    run(nil, pie);
 end
 
-return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run}
+return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run, procAndDisplay=procAndDisplay}

@@ -12,9 +12,12 @@
 
 local input = {}
 
-local output = { "encsb" }
+local output = { "encxjt" }
 
 local gvar = 5; -- fallback
+
+local offset1 = 0.5;
+local offset2 = 0.1;
 
 local function init() 
   cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
@@ -24,12 +27,12 @@ local function init()
 end
 
 local function run()
-  local x = model.getGlobalVariable(gvar, 0);
---  local c = model.getGlobalVariable(gvar + 1, 0); -- sbus rounding mess correction values
---  local o = (x * 1024) / 1638 + c / 10 + 0.5;
-  local o = (x * 1024) / 1638 + 0.5;
---  print(x, c, o);
-  return o;
+   local x = model.getGlobalVariable(gvar, 0);
+   if (x >= 0) then
+      return (x * 1024) / 1638 + offset1;
+   else
+      return (x * 1024) / 1638 + offset2;
+   end
 end
 
 return {output=output, input=input, run=run, init=init}

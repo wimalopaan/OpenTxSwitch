@@ -321,4 +321,4 @@ local function refresh(pie)
   run(nil, pie);
 end
 
-return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run}
+return { name="WMSwTip", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run}

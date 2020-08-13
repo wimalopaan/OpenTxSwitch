@@ -155,6 +155,8 @@ local function init(options)
     gVarOffset = cfg.offsetGVar;
   end
 
+  lib.broadcastReset(gVar);
+  
   if (options) then
     if (options.Name) then
       local filename = "/MODELS/" .. options.Name .. "lua";
@@ -234,18 +236,19 @@ local function update(pie, options)
   pie.options = options;
 end
 
-local lastVisible = getTime();
+local lastVisible = 0;
 
 local function background()
-  if ((getTime() - lastVisible) > 30) then
+   if ((getTime() - lastVisible) > 30) and (lastSelection.item) then
     lastSelection.item = nil;
     lastSelection.col = 0;
+    lib.broadcastReset(gVar);
   end
 end
 
-local function refresh(pie)
+local function refresh(pie, event)
   lastVisible = getTime();
-  run(nil, pie);
+  run(event, pie);
 end
 
-return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background, init=init, run=run, printParameter=printParameter, selectFollow=selectFollow, pushValue=pushValue}
+return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background, init=init, run=run}
