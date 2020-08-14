@@ -53,7 +53,7 @@ end
 local function encodeFunctionSbus(address, number, state)
    -- address / number starts at 1 (lua counting)
    -- state is unmodified
-   print("encodeF:", address, number, state);
+   -- print("encodeF:", address, number, state);
    --  return (128 * (address - 1) + 16 * (number - 1) + state) * 2 - 1024;
    return (64 * (address - 1) + 8 * (number - 1) +  2 * (state - 1)) * 2 - 1024;
 end
@@ -336,25 +336,6 @@ local function processEvents(menu, event, pie)
       menu.state.activeRow = 0;
       menu.state.activeCol = 1;
    end
-
-   -- if (menu.state.activeRow > 0) then
-   --    print(p, p.items);
-   --    if (p.items[menu.state.activeRow].states) then
-   -- 	 if (menu.state.activeCol > #p.items[menu.state.activeRow].states) then
-   -- 	    menu.state.activeCol = #p.items[menu.state.activeRow].states;
-   -- 	 end
-   --    end
-   -- else
-   --    if (event == 100) or (event == EVT_VIRTUAL_NEXT) then
-   -- 	 if (p.next) then
-   -- 	    menu.state.activePage = p.next;
-   -- 	 end
-   --    elseif (event == 101) or (event == EVT_VIRTUAL_PREVT) then
-   -- 	 if p.prev then
-   -- 	    menu.state.activePage = p.prev;
-   -- 	 end
-   --    end
-   -- end
 end
 
 
@@ -407,17 +388,6 @@ local function readButtons(pie)
    return e;
 end 
 
--- local function sendShortCuts(menu, gvar) 
---    for i,s in ipairs(menu.shortCuts) do
---       local ns = switchState(s.switch);
---       if not (s.last == ns) then
--- 	 s.item.state = ns;
--- 	 s.last = ns;
--- 	 sendValue(gvar, encodeFunction(s.item.data.module, s.item.data.count, s.item.state)); 
---       end
---    end
--- end
-
 local function inputToMenuLine(name, menu) 
    local p = menu.state.activePage;
    local n = #p.items;
@@ -437,24 +407,7 @@ local function inputToMenuCol(name, menu)
    return 0;
 end
 
-local function readSpeedDials(lsID, rsID, pie, menu)
-   if (menu.lsID) then
-      local lv = 0;
-      lv = inputToMenuLine(menu.lsID, menu);
-      if not (lv == buttons.lastl) then
-	 menu.state.activeRow = lv;
-	 buttons.lastl = lv;
-      end
-   end
-   if (menu.rsID) then
-      local rv = 0;
-      rv = inputToMenuCol(menu.rsID, menu);
-      if not (rv == buttons.lastr) then
-	 menu.state.activeCol = rv;
-	 buttons.lastr = rv;
-      end
-   end
-
+local function readMenuSwitch(menu)
    if (menu.msFI) then
       local ms = 0;
       ms = getValue(menu.msFI);
@@ -475,27 +428,31 @@ local function readSpeedDials(lsID, rsID, pie, menu)
    end
 end
 
-
--- local function findInputId(name) 
---    for i=0,31 do
---       local inp = getFieldInfo("input" .. i);
---       if (inp) then
--- 	 -- print(i, inp.desc);
--- 	 if (inp.name == name) then
--- 	    return i;
--- 	 end
---       end
---    end
---    return 0;
--- end
+local function readSpeedDials(menu)
+   if (menu.lsID) then
+      local lv = 0;
+      lv = inputToMenuLine(menu.lsID, menu);
+      if not (lv == buttons.lastl) then
+	 menu.state.activeRow = lv;
+	 buttons.lastl = lv;
+      end
+   end
+   if (menu.rsID) then
+      local rv = 0;
+      rv = inputToMenuCol(menu.rsID, menu);
+      if not (rv == buttons.lastr) then
+	 menu.state.activeCol = rv;
+	 buttons.lastr = rv;
+      end
+   end
+   readMenuSwitch(menu);
+end
 
 return {initMenu = initMenu, displayMenu = displayMenu,
-	--findInputId = findInputId,
 	displayInfo = displayInfo,
 	encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
 	processEvents = processEvents,
-	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState,
-	--sendShortCuts = sendShortCuts,
+	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, readMenuSwitch=readMenuSwitch,
 	broadcastReset = broadcastReset,
 	encodeFunctionSbus = encodeFunctionSbus, encodeParameterSbus = encodeParameterSbus, scaleParameterValueSbus = scaleParameterValueSbus,
 	Class = Class};

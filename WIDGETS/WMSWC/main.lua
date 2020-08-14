@@ -42,10 +42,12 @@ local menu = {
 -----
 
 -- used as general module/channel config
-local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "Min", "Max"}, values = {0, 1, 2, 3, 4, 5, 6, 12, 13}};
+--local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru", "Min", "Max"}, values = {0, 1, 2, 3, 4, 5, 6, 12, 13}};
+local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru"}, values = {0, 1, 2, 3, 4, 5, 6}};
 
 -- used as global module config : parameter 14 is used also to learn module address
-local globalParameters = {names = {"L/Res", "MPX0", "MPX1", "MPX2", "MPX3", "MPX4"}, values = {14, 7, 8, 9, 10, 11}};
+--local globalParameters = {names = {"Res", "MPX0", "MPX1", "MPX2", "MPX3", "MPX4"}, values = {14, 7, 8, 9, 10, 11}};
+local globalParameters = {names = {"Learn-Ch/Adr", "TMpx"}, values = {14, 7}};
 
 local defaultFilename = "/MODELS/swstd.lua";
 local defaultFilenameM = "/MODELS/swstdm.lua";
@@ -139,6 +141,7 @@ local function run(event, pie)
   if not event then
     event = lib.readButtons(pie);
   end
+  lib.readMenuSwitch(menu);
   lib.processEvents(menu, event, pie);
   lib.displayMenu(menu, event, pie, config);
   printParameter(pie);  

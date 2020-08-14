@@ -98,16 +98,16 @@ local function background()
 	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
       end
    else
-      -- if ((t - lastbg) > stateTimeout) then
-      -- 	 lastbg = t;
-      -- 	 --        print("state", cycle);
-      -- 	 local i = menu.allItems[cycle];
-      -- 	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
-      -- 	 cycle = cycle + 1;
-      -- 	 if (cycle > #menu.allItems) then
-      -- 	    cycle = 1;
-      -- 	 end
-      -- end
+      if ((t - lastbg) > stateTimeout) then
+      	 lastbg = t;
+      	 --        print("state", cycle);
+      	 local i = menu.allItems[cycle];
+      	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
+      	 cycle = cycle + 1;
+      	 if (cycle > #menu.allItems) then
+      	    cycle = 1;
+      	 end
+      end
    end
 end
 
@@ -129,7 +129,7 @@ local function run(event, pie)
    if not event then
       event = lib.readButtons(pie);
    end
-   lib.readSpeedDials(lsID, rsID, pie, menu);
+   lib.readSpeedDials(menu);
    procAndDisplay(event, pie);
 end
 
