@@ -7,23 +7,22 @@
 -- or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 local input = {
-      {"Input 1", SOURCE},
-      {"Input 2", SOURCE}
+   {"Eing 1", SOURCE},
+   {"Eing 2", SOURCE},
+   {"Gew 2->1", VALUE, -100, 100, 0}
 };
 
 local output = { "Vsp2" }
 
-local function init() 
+local function run(a, b, w)
+   b = b + ((math.abs(a) * w) / 100);
+   local norm = math.sqrt(a * a + b * b);
+   if (norm >= 1024) then
+      return  b * 1024 / norm;
+   else
+      return b;
+   end
 end
 
-local function run(a, b)
-      local norm = math.sqrt(a * a + b * b);
-      if (norm >= 1024) then
-         return  b * 1024 / norm;
-      else
-      	 return b;
-      end
-end
-
-return {output=output, input=input, run=run, init=init}
+return {output=output, input=input, run=run}
 
