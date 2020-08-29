@@ -85,10 +85,10 @@ local function run(a, b, wa, wb)
    Vsp1 = (as * 1024) / rmax;
    Vsp2 = (bs * 1024) / rmax;
 
-   local rr = math.sqrt(Vsp1 * Vsp1 + Vsp2 * Vsp2);
-   print(rmax, Vsp1, Vsp2, rr);
+--   local rr = math.sqrt(Vsp1 * Vsp1 + Vsp2 * Vsp2);
+--   print(rmax, Vsp1, Vsp2, rr);
 
-   return 0;
+--   return 0;
 end
 
 return {input=input, run=run}
