@@ -13,10 +13,8 @@
 
 -- define fallback menu
 
-local mode = 1; -- 0: tiptip; 1: digital-idempotential
-
 local menu = {
-  title = "WM MultiSwitch Fallback",
+  title = "WM MultiTip Fallback";
 
   scrollUpDn = "ls", -- speedDials: direct navigating
   scrollLR = "rs",
@@ -32,22 +30,22 @@ local menu = {
   pages = {
     {
       items = {
-        {name = "Fun A", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = "sa", count = 1, offState = 1, module = 1}},
-        {name = "Fun B", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = "sb", count = 2, offState = 1, module = 1}},
-        {name = "Fun C", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 3, offState = 1, module = 1}},
-        {name = "Fun D", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 4, offState = 1, module = 1}},
-        {name = "Fun E", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 5, offState = 1, module = 1}},
-        {name = "Fun F", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 6, offState = 1, module = 1}},
-        {name = "Fun G", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 7, offState = 1, module = 1}},
-        {name = "Fun H", states = {"aus", "ein", "blink1", "blink2"}, state = 1, cb = nil, data = {switch = nil, count = 8, offState = 1, module = 1}},
+        {name = "Fun A", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = "sa", count = 1, offState = 1, module = 1}},
+        {name = "Fun B", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = "sb", count = 2, offState = 1, module = 1}},
+        {name = "Fun C", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = nil, count = 3, offState = 1, module = 1}},
+        {name = "Fun D", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = nil, count = 4, offState = 1, module = 1}},
+        {name = "Fun E", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = nil, count = 5, offState = 1, module = 1}},
+        {name = "Fun F", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = nil, count = 6, offState = 1, module = 1}},
+        {name = "Fun G", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = nil, count = 7, offState = 1, module = 1}},
+        {name = "Fun H", states = {"aus", "ein 1", "ein 2"}, state = 1, data = {switch = nil, count = 8, offState = 1, module = 1}},
       }
     }
   }
 }   
 
-local defaultFilename = "/MODELS/swstd.lua";
-local defaultFilenameM = "/MODELS/swstdx.lua";
-local defaultFilenameS = "/MODELS/swstdx.lua";
+local defaultFilename = "/MODELS/tpstd.lua";
+local defaultFilenameM = "/MODELS/tpstdm.lua";
+local defaultFilenameS = "/MODELS/tpstds.lua";
 local config = nil;
 local lib = nil;
 local gVar = 5; -- fallback for digital switches
@@ -69,171 +67,114 @@ local sstate = {}
 
 sstate.states = {idle = 0, start = 1, pulse = 2, deadWait = 3};
 sstate.state  = sstate.states.idle;
-sstate.active = {item= nil,
-  pulseCount = 0, nextToggle = 0, startTime = getTime(),
-  on = false};
+sstate.active = {item = nil,
+		 pulseCount = 0, nextToggle = 0, startTime = getTime(),
+		 on = false};
 sstate.switches = nil;
 
 -------
 
 local queue = {};
 
---function queue:push (item)
---  self.last = self.last + 1;
---  self[self.last] = item;
---end
---function queue:pop()
---  local item = self[self.first];
---  self[self.first] = nil;
---  self.first = self.first + 1;
---  return item;
---end
---function queue:size()
---  return self.last - self.first + 1;
---end
-
 local function sendShortCuts() 
-  for name,s in pairs(menu.shortCuts) do
-    local ns = lib.switchState(name);
-    if not (s.last == ns) then
-      s.item.state = ns;
-      s.last = ns;
-      queue:push(s.item);
-    end
-  end
-  for name,l in pairs(menu.overlays) do
---    print(name);
-    local item = l.pagelist[menu.state.activePage];
-    if (item) then
---      print(item.name);
+   for name,s in pairs(menu.shortCuts) do
       local ns = lib.switchState(name);
-      if not (l.last == ns) then
-        item.state = ns;
-        l.last = ns;
-        queue:push(item);
---        print(item.name);
+      if not (s.last == ns) then
+	 s.item.state = ns;
+	 s.last = ns;
+	 queue:push(s.item);
       end
-    end
-  end
+   end
+   for name,l in pairs(menu.overlays) do
+      local item = l.pagelist[menu.state.activePage];
+      if (item) then
+	 local ns = lib.switchState(name);
+	 if not (l.last == ns) then
+	    item.state = ns;
+	    l.last = ns;
+	    queue:push(item);
+	 end
+      end
+   end
 end
-
-local lastbg = getTime();
-local lastbg1 = getTime();
-local cycle = 1;
 
 local function background()
-  if (mode == 0) then
-    if (sstate.state == sstate.states.deadWait) and (getTime() > (parameter.dead.lastAction + parameter.dead.duration)) then
+   sendShortCuts();
+   if (sstate.state == sstate.states.deadWait) and (getTime() > (parameter.dead.lastAction + parameter.dead.duration)) then
       sstate.state = sstate.states.idle;
-    elseif (sstate.state == sstate.states.idle) then
+   elseif (sstate.state == sstate.states.idle) then
       if (queue:size() > 0) then
-        sstate.active.item = queue:pop();
-        sstate.state = sstate.states.start;
+	 sstate.active.item = queue:pop();
+	 sstate.state = sstate.states.start;
       end
-    elseif (sstate.state == sstate.states.start) then
+   elseif (sstate.state == sstate.states.start) then
       sstate.active.startTime = getTime();
       sstate.active.pulseCount = 1;
-      sstate.active.nextToggle = getTime() + ((sstate.active.item.count == 1) and parameter.pulse.long or parameter.pulse.duration);
-      lib.sendValue(sstate.active.item.module + gVarOffset, parameter.pulseValue[sstate.active.item.state]);      
+      sstate.active.nextToggle = getTime() + ((sstate.active.item.data.count == 1) and parameter.pulse.long or parameter.pulse.duration);
+      lib.sendValue(sstate.active.item.data.module + gVarOffset, parameter.pulseValue[sstate.active.item.state]);      
       sstate.state = sstate.states.pulse;
       sstate.active.on = true;
-    elseif (sstate.state == sstate.states.pulse) then
+   elseif (sstate.state == sstate.states.pulse) then
       if (getTime() > sstate.active.nextToggle) then
         if (sstate.active.on) then
-          lib.sendValue(sstate.active.item.module + gVarOffset, parameter.pulseValue[parameter.neutral]);
-          sstate.active.on = false;
-          sstate.active.nextToggle = sstate.active.nextToggle + parameter.pulse.pause;
-          if (sstate.active.item.count == sstate.active.pulseCount) then
-            sstate.state = sstate.states.deadWait;
-            parameter.dead.lastAction = getTime();
-            playHaptic(10, 100);
-          end
+	   lib.sendValue(sstate.active.item.data.module + gVarOffset, parameter.pulseValue[parameter.neutral]);
+	   sstate.active.on = false;
+	   sstate.active.nextToggle = sstate.active.nextToggle + parameter.pulse.pause;
+	   if (sstate.active.item.data.count == sstate.active.pulseCount) then
+	      sstate.state = sstate.states.deadWait;
+	      parameter.dead.lastAction = getTime();
+	      playHaptic(10, 100);
+	   end
         else 
-          sstate.active.pulseCount = sstate.active.pulseCount + 1;
-          lib.sendValue(sstate.active.item.module + gVarOffset, parameter.pulseValue[sstate.active.item.state]);
-          sstate.active.on = true;
-          sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.item.count > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
+	   sstate.active.pulseCount = sstate.active.pulseCount + 1;
+	   lib.sendValue(sstate.active.item.data.module + gVarOffset, parameter.pulseValue[sstate.active.item.state]);
+	   sstate.active.on = true;
+	   sstate.active.nextToggle = sstate.active.nextToggle + ((sstate.active.item.data.count > sstate.active.pulseCount) and parameter.pulse.duration or parameter.pulse.long);
         end
       end
-    end
-  elseif (mode == 1) then
-    local t = getTime();
-    if (queue:size() > 0) then
---      print("q > 0");
-      if ((t - lastbg1) > stateTimeout) then
-        lastbg = t;
-        lastbg1 = t;
-        local i = queue:pop();
-        if (config.useSbus > 0) then
-          lib.sendValue(gVar, lib.encodeFunctionSbus(i.data.module, i.data.count, i.state)); 
-        else
-          lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
-        end
-      end
-    else
-      if ((t - lastbg) > stateTimeout) then
-        lastbg = t;
---        print("state", cycle);
-        local i = menu.allItems[cycle];
-        if (config.useSbus > 0) then
-          lib.sendValue(gVar, lib.encodeFunctionSbus(i.data.module, i.data.count, i.state)); 
-        else
-          lib.sendValue(gVar, lib.encodeFunction(i.data.module, i.data.count, i.state)); 
-        end
-        cycle = cycle + 1;
-        if (cycle > #menu.allItems) then
-          cycle = 1;
-        end
-      end
-    end
-    sendShortCuts();
---    lib.sendShortCuts(menu, gVar);
-  end 
-end
-
-local function toggle(count, state, module)
---  print("toggle", count, state, module);
-  local e = {count = count, state = state, module = module};
-  queue:push(e);
+   end
 end
 
 local function select(item, menu)
   if (not item) then
-    return;
+     return;
   end
-  if (mode == 0) then
-    if not (item.state == menu.state.activeCol) then
-      if not (item.state == item.data.offState) then
-        toggle(item.data.count, item.state, item.data.module);
-      end
-      if not (menu.state.activeCol == item.data.offState) then
-        toggle(item.data.count, menu.state.activeCol, item.data.module);
-      end
-      item.state = menu.state.activeCol;
-    end
-  elseif (mode == 1) then
---    print("sel: ", item, item.name, item.state, menu.state.activeCol);
-    item.state = menu.state.activeCol;
-    queue:push(item);
---    lib.sendValue(gVar, lib.encodeFunction(item.data.module, item.data.count, item.state)); 
+  print("sel: ", item, item.name, item.state, menu.state.activeCol);
+
+  if (menu.state.activeCol == item.data.offState) then
+     if not (item.state == item.data.offState) then
+	local dummy = {};
+	dummy.state = item.state;
+	dummy.data = item.data;
+	item.state = item.data.offState;
+	queue:push(dummy);
+     end
+  else
+     if not (item.state == menu.state.activeCol) then
+	item.state = menu.state.activeCol;
+	queue:push(item);
+     end
   end
 end
 
-local function run(event, pie)
-  if not event then
-    event = lib.readButtons(pie);
-  end
-  lib.readSpeedDials(lsID, rsID, pie, menu);
-  lib.processEvents(menu, event, pie);
-  lib.displayMenu(menu, event, pie, config);
+local function procAndDisplay(event, pie)
+   lib.processEvents(menu, event, pie);
+   lib.displayMenu(menu, event, pie, config);
+end
 
-  if (mode == 0) then
-    if not (sstate.state == sstate.states.idle) then
+local function run(event, pie)
+   if not event then
+      event = lib.readButtons(pie);
+   end
+   lib.readSpeedDials(lsID, rsID, pie, menu);
+   lib.processEvents(menu, event, pie);
+   lib.displayMenu(menu, event, pie, config);
+   
+   if not (sstate.state == sstate.states.idle) then
       lib.displayInfo(pie, "busy!");
-    else
+   else
       lib.displayInfo(pie, "-----");
-    end
-  end
+   end
 end
 
 local function init(options)
@@ -243,57 +184,57 @@ local function init(options)
   queue = lib.Class.Queue.new();
 
   if (cfg) then
-    gVar = cfg.switchGVar;
-    gVarOffset = cfg.offsetGVar;
-    stateTimeout = cfg.stateTimeout;
+     gVar = cfg.switchGVar;
+     gVarOffset = cfg.offsetGVar;
+     stateTimeout = cfg.stateTimeout;
   end
 
   local cfgName = nil;
   if (options) then
-    if (options.Name) then
-      local filename = "/MODELS/" .. options.Name .. "lua";
-      cfgName = filename;
-      local fd = io.open(filename, "r");
-      if (fd) then
-        local configFunction = loadfile(filename);
-        if (configFunction) then
-          config = configFunction();
-        end
-      end
-    end
+     if (options.Name) then
+	local filename = "/MODELS/" .. options.Name .. "lua";
+	cfgName = filename;
+	local fd = io.open(filename, "r");
+	if (fd) then
+	   local configFunction = loadfile(filename);
+	   if (configFunction) then
+	      config = configFunction();
+	   end
+	end
+     end
   end
   if not config then
-    cfgName = model.getInfo().name .. ".lua";
-    local configFunction = loadfile(cfgName);
-    if (configFunction) then
-      config = configFunction();
-    end
+     cfgName = model.getInfo().name .. ".lua";
+     local configFunction = loadfile(cfgName);
+     if (configFunction) then
+	config = configFunction();
+     end
   end
   if not config then
-    if (LCD_W <= 212) then
-      defaultFilename = defaultFilenameM;
-    end
-    if (LCD_W <= 128) then
-      defaultFilename = defaultFilenameS;
-    end
-    cfgName = defaultFilename;
-    config = loadfile(defaultFilename)();
+     if (LCD_W <= 212) then
+	defaultFilename = defaultFilenameM;
+     end
+     if (LCD_W <= 128) then
+	defaultFilename = defaultFilenameS;
+     end
+     cfgName = defaultFilename;
+     config = loadfile(defaultFilename)();
   end
 
   config.cfgName = cfgName;
 
   if (config.menu) then
-    menu = config.menu;
+     menu = config.menu;
   end
 
   for i,p in ipairs(menu.pages) do
-    if (p.config) then
-      menu.pages[i] = nil;
-    end
+     if (p.config) then
+	menu.pages[i] = nil;
+     end
   end
 
   lib.initMenu(menu, select, cfg.version, true);
-  
+
   return lib, menu, config;
 end
 
@@ -321,4 +262,4 @@ local function refresh(pie)
   run(nil, pie);
 end
 
-return { name="WMSwTip", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run}
+return { name="WMSwTip", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run, procAndDisplay=procAndDisplay}
