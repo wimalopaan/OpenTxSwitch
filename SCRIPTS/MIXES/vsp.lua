@@ -10,13 +10,16 @@ local input = {
    {"Eing 1", SOURCE},
    {"Eing 2", SOURCE},
    {"Gew 1->2", VALUE, -100, 100, 0},
-   {"Gew 2->1", VALUE, -100, 100, 0}
+   {"Gew 2->1", VALUE, -100, 100, 0},
+   {"VSP", VALUE, 1, 2, 1}
 };
 
-Vsp1 = 0;
-Vsp2 = 0;
+Vsp11 = 0;
+Vsp12 = 0;
+Vsp21 = 0;
+Vsp22 = 0;
 
-local function run(a, b, wa, wb)
+local function run(a, b, wa, wb, vsp)
    local ab = math.abs(a);
    local bb = math.abs(b);  
    local as = a + ((bb * wb) / 100);
@@ -82,8 +85,14 @@ local function run(a, b, wa, wb)
       end
    end
    rmax = math.sqrt(Amax * Amax + Bmax * Bmax);
-   Vsp1 = (as * 1024) / rmax;
-   Vsp2 = (bs * 1024) / rmax;
+
+   if (vsp == 1) then
+      Vsp11 = (as * 1024) / rmax;
+      Vsp12 = (bs * 1024) / rmax;
+   else
+      Vsp21 = (as * 1024) / rmax;
+      Vsp22 = (bs * 1024) / rmax;
+   end
 
 --   local rr = math.sqrt(Vsp1 * Vsp1 + Vsp2 * Vsp2);
 --   print(rmax, Vsp1, Vsp2, rr);

@@ -14,7 +14,7 @@ local name = "Default";
 
 local gVariable = 5;
 
-local useSbus = 1; -- only 4 states, only 16 parameter values
+local useSbus = 0; -- only 4 states, only 16 parameter values
 
 local gstates1 = {"aus", "ein", "blink1", "blink2"};
 local gstates2 = {"aus", "ein 1", "ein 2"};

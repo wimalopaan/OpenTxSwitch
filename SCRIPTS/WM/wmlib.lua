@@ -84,14 +84,22 @@ local function broadcastReset(gvar)
    sendValue(gvar, encodeParameter(15, 31)); -- broadcast, turn off all outputs
 end 
 
-local function switchState(s) 
+local function switchState(s)
    local v = getValue(s);
-   if (v < 0) then
-      return 2;
-   elseif (v > 0) then
-      return 3;
-   else 
-      return 1;
+   if (string.find(s, "ls")) then
+      if (v < 0) then
+	 return 1;
+      else 
+	 return 2;
+      end
+   else
+      if (v < 0) then
+	 return 2;
+      elseif (v > 0) then
+	 return 3;
+      else 
+	 return 1;
+      end
    end
 end
 
@@ -448,6 +456,18 @@ local function readSpeedDials(menu)
    readMenuSwitch(menu);
 end
 
+local function readConfig(filename)
+   local config = nil;
+   local fd = io.open(filename, "r");
+   if (fd) then
+      local configFunction = loadfile(filename);
+      if (configFunction) then
+	 config = configFunction();
+      end
+   end
+   return config;
+end
+
 return {initMenu = initMenu, displayMenu = displayMenu,
 	displayInfo = displayInfo,
 	encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
@@ -455,4 +475,5 @@ return {initMenu = initMenu, displayMenu = displayMenu,
 	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, readMenuSwitch=readMenuSwitch,
 	broadcastReset = broadcastReset,
 	encodeFunctionSbus = encodeFunctionSbus, encodeParameterSbus = encodeParameterSbus, scaleParameterValueSbus = scaleParameterValueSbus,
+	readConfig = readConfig,
 	Class = Class};

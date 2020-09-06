@@ -161,24 +161,28 @@ local function init(options)
   lib.broadcastReset(gVar);
   
   if (options) then
-    if (options.Name) then
-      local filename = "/MODELS/" .. options.Name .. "lua";
-      cfgName = filename;
-      local fd = io.open(filename, "r");
-      if (fd) then
-        local configFunction = loadfile(filename);
-        if (configFunction) then
-          config = configFunction();
-        end
-      end
-    end
+     if (options.Name) then
+	local filename = "/MODELS/" .. options.Name .. "lua";
+	cfgName = filename;
+	local fd = io.open(filename, "r");
+	if (fd) then
+	   local configFunction = loadfile(filename);
+	   if (configFunction) then
+	      config = configFunction();
+	   end
+	end
+     end
   end
   if not config then
-    cfgName = model.getInfo().name .. ".lua";
-    local configFunction = loadfile(cfgName);
-    if (configFunction) then
-      config = configFunction();
-    end
+     local filename = "/MODELS/" .. model.getInfo().name .. ".lua";
+     cfgName = filename;
+     local fd = io.open(filename, "r");
+     if (fd) then
+	local configFunction = loadfile(filename);
+	if (configFunction) then
+	   config = configFunction();
+	end
+     end
   end
   if not config then
     if (LCD_W <= 212) then
