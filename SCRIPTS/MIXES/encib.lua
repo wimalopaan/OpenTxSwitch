@@ -24,7 +24,12 @@ local function init()
 end
 
 local function run()
-  return model.getGlobalVariable(gvar, 0);
+   local x = model.getGlobalVariable(gvar, 0);
+   if (x >= 0) then
+      return x + 1;
+   else
+      return x;
+   end
 end
 
 return {output=output, input=input, run=run, init=init}
