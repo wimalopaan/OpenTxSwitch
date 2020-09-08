@@ -282,10 +282,104 @@ local function displayMenu(menu, event, pie, config)
    end
 end
 
-local function processEvents(menu, event, pie)
+local function nextRow(menu) -- with page wrap
    local p = menu.state.activePage;
-   if (event == EVT_VIRTUAL_DEC) then
-      if (EVT_VIRTUAL_DEC == EVT_VIRTUAL_PREV) then
+   if (menu.state.activeRow < #p.items) then
+      menu.state.activeRow = menu.state.activeRow + 1;
+   else
+      if (p.next) then
+	 menu.state.activePage = p.next;
+	 menu.state.activeRow = 1;
+end
+   end
+end
+
+local function prevRow(menu) -- with page wrap
+   local p = menu.state.activePage;
+   if menu.state.activeRow > 1 then
+      menu.state.activeRow = menu.state.activeRow - 1;
+   else
+      if (p.prev) then
+	 menu.state.activePage = p.prev;
+	 menu.state.activeRow = #p.prev.items;
+      end
+   end
+end
+
+local function nextCol(menu) -- with line and page wrap
+   local p = menu.state.activePage;
+   if (menu.state.activeRow < 1) then
+      menu.state.activeRow = 1;
+   end
+   if (menu.state.activeCol < #p.items[menu.state.activeRow].states) then
+      menu.state.activeCol = menu.state.activeCol + 1;
+   else
+      if (menu.state.activeRow < #p.items) then
+	 menu.state.activeRow = menu.state.activeRow + 1;
+	 menu.state.activeCol = 1;
+      else
+	 if (p.next) then
+	    menu.state.activePage = p.next;
+	    menu.state.activeRow = 1;
+	    menu.state.activeCol = 1;
+	 end
+      end
+   end
+end
+
+local function prevCol(menu) -- with line and page wrap
+   local p = menu.state.activePage;
+   if (menu.state.activeCol > 1) then
+      menu.state.activeCol = menu.state.activeCol - 1;
+   else
+      if (menu.state.activeRow > 1) then
+	 menu.state.activeRow = menu.state.activeRow - 1;
+	 menu.state.activeCol = #p.items[menu.state.activeRow].states;
+      else
+	 if (p.prev) then
+	    menu.state.activePage = p.prev;
+	    menu.state.activeRow = #p.prev.items;
+	    menu.state.activeCol = #p.prev.items[#p.prev.items].states;
+	 end
+      end
+   end
+end
+
+local function processEvents(menu, event, pie)
+--   print("ev:", event, EVT_VIRTUAL_DEC, EVT_VIRTUAL_PREV);
+   local p = menu.state.activePage;
+   if (event == EVT_VIRTUAL_DEC) then -- up
+      if (EVT_VIRTUAL_DEC == EVT_VIRTUAL_PREV) then -- scroll
+	 prevCol(menu);
+      else
+	 nextRow(menu);
+      end
+   elseif (event == EVT_VIRTUAL_INC) then
+      if (EVT_VIRTUAL_INC == EVT_VIRTUAL_NEXT) then
+	 nextCol(menu);
+   else
+	 prevRow(menu);
+   end
+   elseif (event == 100) or (event == EVT_VIRTUAL_NEXT) then
+      nextCol(menu);
+   elseif (event == 101) or (event == EVT_VIRTUAL_PREV) then
+      prevCol(menu);
+   elseif (event == EVT_VIRTUAL_ENTER) then
+      if (menu.state.activeRow > 0) then
+	 --      print("X: ", p.items[menu.state.activeRow]);
+	 menu.cb(p.items[menu.state.activeRow], menu);
+      end
+   elseif (event == EVT_VIRTUAL_EXIT) then
+      menu.state.activeRow = 0;
+      menu.state.activeCol = 1;
+   end
+end
+
+local function processEventsOld(menu, event, pie)
+--   print("ev:", event, EVT_VIRTUAL_DEC, EVT_VIRTUAL_PREV);
+   local p = menu.state.activePage;
+   if (event == EVT_VIRTUAL_DEC) then -- up
+      if (EVT_VIRTUAL_DEC == EVT_VIRTUAL_PREV) then -- scroll  
 	 if (menu.state.activeCol > 1) then
 	    menu.state.activeCol = menu.state.activeCol - 1;
 	 else
@@ -300,7 +394,7 @@ local function processEvents(menu, event, pie)
 	       end
 	    end
 	 end
-      else
+      else 
 	 if (menu.state.activeRow < #p.items) then
 	    menu.state.activeRow = menu.state.activeRow + 1; 
 	 end

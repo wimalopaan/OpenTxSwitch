@@ -36,12 +36,18 @@ local menu = {
   pages = {
     { -- template for digital multiswitch RC-MultiSwitch-D @ Address(1)
       items = {
-        {name = "Fun A", states = gstates, state = 1, data = {switch = "sa", count = 1, module = 1}},
-        {name = "Fun B", states = gstates, state = 1, data = {switch = "sb", count = 2, module = 1}},
-        {name = "Fun C", states = gstates, state = 1, data = {switch = nil, count = 3, module = 1}},
-        {name = "Fun D", states = gstates, state = 1, data = {switch = "se", count = 4, module = 1}},
-        {name = "Fun E", states = gstates, state = 1, data = {switch = nil, count = 5, module = 1}},
-        {name = "Fun F", states = {"a", "e", "A", "B"}, state = 1, data = {switch = nil, count = 6, module = 1}},
+        {name = "FA", states = gstates, state = 1, data = {switch = "sa", count = 1, module = 1}},
+        {name = "FB", states = gstates, state = 1, data = {switch = "sb", count = 2, module = 1}},
+        {name = "FC", states = gstates, state = 1, data = {switch = nil, count = 3, module = 1}},
+        {name = "FD", states = gstates, state = 1, data = {switch = nil, count = 4, module = 1}},
+        {name = "FE", states = gstates, state = 1, data = {switch = nil, count = 5, module = 1}},
+        {name = "FF", states = {"a", "e", "A", "B"}, state = 1, data = {switch = nil, count = 6, module = 1}},
+      }
+    },
+    { -- template for digital multiswitch RC-MultiSwitch-D @ Address(1)
+      items = {
+        {name = "FG", states = gstates, state = 1, data = {switch = nil, count = 1, module = 1}},
+        {name = "FH", states = gstates, state = 1, data = {switch = nil, count = 2, module = 1}},
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) global module configuration
