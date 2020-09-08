@@ -357,9 +357,9 @@ local function processEvents(menu, event, pie)
    elseif (event == EVT_VIRTUAL_INC) then
       if (EVT_VIRTUAL_INC == EVT_VIRTUAL_NEXT) then
 	 nextCol(menu);
-   else
+      else
 	 prevRow(menu);
-   end
+      end
    elseif (event == 100) or (event == EVT_VIRTUAL_NEXT) then
       nextCol(menu);
    elseif (event == 101) or (event == EVT_VIRTUAL_PREV) then

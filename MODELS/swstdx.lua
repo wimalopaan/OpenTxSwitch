@@ -46,14 +46,14 @@ local menu = {
     },
     { -- template for digital multiswitch RC-MultiSwitch-D @ Address(1)
       items = {
-        {name = "FG", states = gstates, state = 1, data = {switch = nil, count = 1, module = 1}},
-        {name = "FH", states = gstates, state = 1, data = {switch = nil, count = 2, module = 1}},
+        {name = "FG", states = gstates, state = 1, data = {switch = nil, count = 7, module = 1}},
+        {name = "FH", states = gstates, state = 1, data = {switch = nil, count = 8, module = 1}},
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(4) global module configuration
       config = true; -- enables globalParameters
       items = {
-        {name = "Mod@1", states = {}, state = 1, data = {switch = nil, count = 1, module = 1}}
+        {name = "M@1", states = {}, state = 1, data = {switch = nil, count = 1, module = 1}}
       }
     }
   }
