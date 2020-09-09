@@ -148,13 +148,13 @@ local function init(options)
    local cfgName = nil;
    if (options) then
       if (options.Name) then
-	 local filename = "/MODELS/" .. options.Name .. "lua";
+	 local filename = lib.nameToConfigFilename(options.Name);
 	 cfgName = filename;
 	 config = lib.readConfig(filename);
       end
    end
    if not config then
-      local filename = "/MODELS/" .. model.getInfo().name .. ".lua";
+      local filename = lib.nameToConfigFilename(model.getInfo().name);
       cfgName = filename;
       config = lib.readConfig(filename);
    end

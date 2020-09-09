@@ -496,6 +496,12 @@ local function readConfig(filename)
    return config;
 end
 
+local function nameToConfigFilename(name)
+   return "/MODELS/" .. name .. ".lua";
+end
+
+
+
 return {initMenu = initMenu, displayMenu = displayMenu,
 	displayInfo = displayInfo,
 	encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
@@ -503,5 +509,5 @@ return {initMenu = initMenu, displayMenu = displayMenu,
 	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, readMenuSwitch=readMenuSwitch,
 	broadcastReset = broadcastReset,
 	encodeFunctionSbus = encodeFunctionSbus, encodeParameterSbus = encodeParameterSbus, scaleParameterValueSbus = scaleParameterValueSbus,
-	readConfig = readConfig,
+	readConfig = readConfig, nameToConfigFilename=nameToConfigFilename,
 	Class = Class};
