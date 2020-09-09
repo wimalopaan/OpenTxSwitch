@@ -165,56 +165,67 @@ local function refresh(event)
    local first = module["firstChannel"];
    local chN = module["channelsCount"];
 
+   local x0 = 10;
    local x = 40;
    local y = 32;
-   
+   local dy = 16;
+
+   if (LCD_W <= 212) then
+      x0 = 0;
+      x = 17;
+      y = 8;
+      dy = 8;
+   end
+
    lcd.drawText(x, y, "Type: " .. type);
-   y = y + 16;
+   y = y + dy;
    if (proto) then
       lcd.drawText(x, y, "Prot: " .. proto);
-      y = y + 16;
+      y = y + dy;
    end
    if (sproto) then
-      lcd.drawText(x, y, "SPro: " .. sproto);
-      y = y + 16;
+      lcd.drawText(x, y, "SubProt: " .. sproto);
+      y = y + dy;
    end
-   if (rfp) then
-      lcd.drawText(x, y, "RFp: " .. rfp);
-      y = y + 16;
-   end
-   if (rxid) then
-      lcd.drawText(x, y, "RX: " .. rxid);
-      y = y + 16;
-   end
-   if (first) then
-      lcd.drawText(x, y, "CH: " .. first);
-      y = y + 16;
-   end
-   if (chN) then
-      lcd.drawText(x, y, "N: " .. chN);
-      y = y + 16;
+   if (LCD_H > 64) then
+      if (rfp) then
+	 lcd.drawText(x, y, "RFp: " .. rfp);
+	 y = y + dy;
+      end
+      if (rxid) then
+	 lcd.drawText(x, y, "RX: " .. rxid);
+	 y = y + dy;
+      end
+      if (first) then
+	 lcd.drawText(x, y, "CH: " .. first);
+	 y = y + dy;
+      end
+      if (chN) then
+	 lcd.drawText(x, y, "N: " .. chN);
+	 y = y + dy;
+      end
    end
    if (filename) then
       lcd.drawText(x, y, "File: " .. filename);
       if (ownConfigFound) then
-	 lcd.drawText(10, y, "yes");
+	 lcd.drawText(x0, y, "yes");
       else
-	 lcd.drawText(10, y, "no");
+	 lcd.drawText(x0, y, "no");
       end
-      y = y + 16;
+      y = y + dy;
    end
    if (config) then
       lcd.drawText(x, y, "Sbus: " .. config.useSbus);
-      y = y + 16;
+      y = y + dy;
    end
 
    local t1 = needSBus(module) and "yes" or "no";
    
    lcd.drawText(x, y, "Need Sbus: " .. t1);
-   y = y + 16;
+   y = y + dy;
    
    lcd.drawText(x, y, "Algo: " .. algoName[needScaleAlgo(module)]);
-   y = y + 16;
+   y = y + dy;
    
 end
 
