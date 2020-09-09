@@ -20,7 +20,7 @@ local offset1 = 1.5;
 local offset2 = 0.5;
 
 local function init() 
-  cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
+  local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
   if (cfg) then
     gvar = cfg.switchGVar;
   end

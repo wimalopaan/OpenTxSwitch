@@ -17,7 +17,7 @@ local output = { "encib" }
 local gvar = 5; -- fallback
 
 local function init() 
-  cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
+  local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
   if (cfg) then
     gvar = cfg.switchGVar;
   end
