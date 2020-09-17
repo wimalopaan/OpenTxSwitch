@@ -219,8 +219,7 @@ local function refresh(event)
       y = y + dy;
    end
 
-   local t1 = needSBus(module) and "yes" or "no";
-   
+   local t1 = needSBus(module) and "yes" or "no";   
    lcd.drawText(x, y, "Need Sbus: " .. t1);
    y = y + dy;
    

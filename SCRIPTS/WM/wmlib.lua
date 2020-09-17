@@ -75,7 +75,8 @@ local function encodeParameterSbus(parameter, value)
 end
 
 local function sendValue(gvar, value)
-   --  print("sendV: ", value);
+--   local v = bit32.band(value, 0xFFFF);
+--   print("sendV: ", value, v);
    model.setGlobalVariable(gvar, getFlightMode(), value);
 end
 
@@ -269,15 +270,15 @@ local function displayMenu(menu, event, pie, config)
       local fw = pie.zone.w / (#opt.states + 1);
       for col, st in ipairs(opt.states) do
 	 x = x + fw;
-	 if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
-	    lcd.drawText(x, y, st, BLINK + INVERS + SMLSIZE);
-	 else
-	    if (col == opt.state) then
-	       lcd.drawText(x, y, st, INVERS + SMLSIZE);
-	    else
-	       lcd.drawText(x, y, st, SMLSIZE);
+	 attr = SMLSIZE;
+	 if (col == opt.state) then
+	    attr = attr + INVERS;
+	 else 
+	    if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
+	       attr = SMLSIZE + BLINK + INVERS;
 	    end
 	 end
+	 lcd.drawText(x, y, st, attr);
       end
    end
 end
@@ -354,16 +355,20 @@ local function processEvents(menu, event, pie)
       else
 	 nextRow(menu);
       end
+      return 1;
    elseif (event == EVT_VIRTUAL_INC) then
       if (EVT_VIRTUAL_INC == EVT_VIRTUAL_NEXT) then
 	 nextCol(menu);
       else
 	 prevRow(menu);
       end
+      return 1;
    elseif (event == 100) or (event == EVT_VIRTUAL_NEXT) then
       nextCol(menu);
+      return 1;
    elseif (event == 101) or (event == EVT_VIRTUAL_PREV) then
       prevCol(menu);
+      return 1;
    elseif (event == EVT_VIRTUAL_ENTER) then
       if (menu.state.activeRow > 0) then
 	 --      print("X: ", p.items[menu.state.activeRow]);
@@ -373,6 +378,7 @@ local function processEvents(menu, event, pie)
       menu.state.activeRow = 0;
       menu.state.activeCol = 1;
    end
+   return 0;
 end
 
 local buttons = {
@@ -459,9 +465,11 @@ local function readMenuSwitch(menu)
 	 --print(s);
 	 if (s <= #menu.pages) then
 	    menu.state.activePage = menu.pages[s];
+	    return 1;
 	 end
       end
    end
+   return 0;
 end
 
 local function readSpeedDials(menu)

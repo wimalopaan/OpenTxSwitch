@@ -87,6 +87,9 @@ local lastbg1 = getTime();
 local cycle = 1;
 
 local function background()
+   if (model.getGlobalVariable(gVar + 1, 0) > 0) then
+      return;
+   end
    sendShortCuts();
    local t = getTime();
    if (queue:size() > 0) then

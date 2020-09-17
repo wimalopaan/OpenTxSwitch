@@ -64,24 +64,16 @@ local lastSelection = {item = nil, col = 0, time = 0};
 
 local followHasRun = false;
 
+local encode = nil;
+local encodeParam = nil;
+local scaleParameter = nil;
 
 local function pushValue()
   local dt = getTime() - lastSelection.time;
   if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
-    local v = 0;
-    if (config.useSbus > 0) then
-      v = lib.scaleParameterValueSbus(getValue(menu.parameterDial));
-    else
-      v = lib.scaleParameterValue(getValue(menu.parameterDial));
-    end
---    print("push: ", v);
---    lib.sendValue(gVar, lib.encodeParameter(lastSelection.col, v));
+    local v = scaleParameter(getValue(menu.parameterDial));
     local pv = lastSelection.item.stateValues[lastSelection.col];
-    if (config.useSbus > 0) then
-      lib.sendValue(gVar, lib.encodeParameterSbus(pv, v));
-    else
-      lib.sendValue(gVar, lib.encodeParameter(pv, v));
-    end
+    lib.sendValue(gVar, encodeParam(pv, v));
   end
 end
 
@@ -113,12 +105,7 @@ local function selectFollow()
   if (lastSelection.item and (dt > 10) and not followHasRun) then
     followHasRun = true;
     lastSelection.time = getTime();
-    if (config.useSbus > 0) then
-      lib.sendValue(gVar, lib.encodeFunctionSbus(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
-    else
-      lib.sendValue(gVar, lib.encodeFunction(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
-    end
---    print("selFollow");
+    lib.sendValue(gVar, encode(lastSelection.item.data.module, lastSelection.item.data.count, 2)); -- select on state 
   end
 end
 
@@ -128,21 +115,23 @@ end
 
 local function printParameter(pie)
   local r = getValue(menu.parameterDial);
-  local v = 0;
-  if (config.useSbus > 0) then
-    v = lib.scaleParameterValueSbus(r);
-  else
-    v = lib.scaleParameterValue(r);
+  local v = scaleParameter(r);
+  local attr = SMLSIZE;
+  if (lastSelection.item) then
+     attr = attr + INVERS;
   end
-  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + pie.zone.y_poffset, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), SMLSIZE);
+  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + pie.zone.y_poffset, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), attr);
 end
 
 local function run(event, pie)
   if not event then
     event = lib.readButtons(pie);
   end
-  lib.readMenuSwitch(menu);
-  lib.processEvents(menu, event, pie);
+  local r = lib.readMenuSwitch(menu);
+  r = r + lib.processEvents(menu, event, pie);
+  if (r > 0) then
+     deselectAll();
+  end
   lib.displayMenu(menu, event, pie, config);
   printParameter(pie);  
   selectFollow();
@@ -203,6 +192,16 @@ local function init(options)
 
   menu.title = menu.title.. " - Config";
 
+  if (config.useSbus > 0) then
+     encode = lib.encodeFunctionSbus;
+     encodeParam = lib.encodeParameterSbus;
+     scaleParameter = lib.scaleParameterValueSbus;
+  else
+     encode = lib.encodeFunction;
+     encodeParam = lib.encodeParameter;
+     scaleParameter = lib.scaleParameterValue;
+  end
+
   lib.initMenu(menu, select, cfg.version, false);
 
   for i,p in ipairs(menu.pages) do
@@ -246,16 +245,19 @@ end
 local lastVisible = 0;
 
 local function background()
-   if ((getTime() - lastVisible) > 30) and (lastSelection.item) then
-    lastSelection.item = nil;
-    lastSelection.col = 0;
-    lib.broadcastReset(gVar);
-  end
+   if ((getTime() - lastVisible) > 30) and (lastVisible > 0) then
+      model.setGlobalVariable(gVar + 1, 0, 0);
+      lastVisible = 0;
+      lastSelection.item = nil;
+      lastSelection.col = 0;
+      lib.broadcastReset(gVar);
+   end
 end
 
 local function refresh(pie, event)
-  lastVisible = getTime();
-  run(event, pie);
+   lastVisible = getTime();
+   model.setGlobalVariable(gVar + 1, 0, 1);
+   run(event, pie);
 end
 
 return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background, init=init, run=run}

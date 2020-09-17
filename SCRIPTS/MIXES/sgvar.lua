@@ -22,8 +22,13 @@ local input = {
 
 local output = { "send gvar" };
 
+local c = 0;
+
 local function run(number)
-   return model.getGlobalVariable(number, 0);
+   print("c: ", c);
+   c = c + 1;
+   local v = model.getGlobalVariable(number, 0);
+   return v;
 end
 
 return {output=output, input=input, run=run}
