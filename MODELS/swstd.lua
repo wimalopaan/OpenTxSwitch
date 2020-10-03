@@ -18,6 +18,7 @@ local useSbus = 0; -- only 4 states, only 16 parameter values
 
 local gstates1 = {"aus", "ein", "blink1", "blink2"};
 local gstates2 = {"aus", "ein 1", "ein 2"};
+local gstates3 = {"Pos1", "Pos2", "Pos3", "Pos4", "Pos5"};
 
 local menu = {
   title = "WM MultiSwitch",
@@ -95,42 +96,51 @@ local menu = {
         {name = "M5H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 5}},
       }
     },
-    { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(6)
+    { -- template for Servo-Switch RC-ServoSwitch-D @ Address(6)
       items = {
-        {name = "M6A", states = gstates2, state = 1, data = {switch = "se", count = 1, module = 6}},
-        {name = "M6B", states = gstates2, state = 1, data = {switch = nil, count = 2, module = 6}},
-        {name = "M6C", states = gstates2, state = 1, data = {switch = nil, count = 3, module = 6}},
-        {name = "M6D", states = gstates2, state = 1, data = {switch = nil, count = 4, module = 6}},
-        {name = "M6E", states = gstates2, state = 1, data = {switch = nil, count = 5, module = 6}},
-        {name = "M6F", states = gstates2, state = 1, data = {switch = nil, count = 6, module = 6}},
-        {name = "M6G", states = gstates2, state = 1, data = {switch = nil, count = 7, module = 6}},
-        {name = "M6H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 6}},
+        {name = "A1", states = gstates3, state = 1, data = {switch = nil, count = 1, module = 6}},
+        {name = "A2", states = gstates3, state = 1, data = {switch = "sb", count = 2, module = 6}},
+        {name = "A3", states = gstates3, state = 1, data = {switch = nil, count = 3, module = 6}},
+        {name = "A4", states = gstates3, state = 1, data = {switch = "se", count = 4, module = 6}},
+        {name = "A5", states = gstates3, state = 1, data = {switch = nil, count = 5, module = 6}},
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(7)
       items = {
-        {name = "M7A", states = gstates2, state = 1, data = {switch = "se", count = 1, module = 7}},
-        {name = "M7B", states = gstates2, state = 1, data = {switch = nil, count = 2, module = 7}},
-        {name = "M7C", states = gstates2, state = 1, data = {switch = nil, count = 3, module = 7}},
-        {name = "M7D", states = gstates2, state = 1, data = {switch = nil, count = 4, module = 7}},
-        {name = "M7E", states = gstates2, state = 1, data = {switch = nil, count = 5, module = 7}},
-        {name = "M7F", states = gstates2, state = 1, data = {switch = nil, count = 6, module = 7}},
-        {name = "M7G", states = gstates2, state = 1, data = {switch = nil, count = 7, module = 7}},
-        {name = "M7H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 7}},
+        {name = "M6A", states = gstates2, state = 1, data = {switch = "se", count = 1, module = 7}},
+        {name = "M6B", states = gstates2, state = 1, data = {switch = nil, count = 2, module = 7}},
+        {name = "M6C", states = gstates2, state = 1, data = {switch = nil, count = 3, module = 7}},
+        {name = "M6D", states = gstates2, state = 1, data = {switch = nil, count = 4, module = 7}},
+        {name = "M6E", states = gstates2, state = 1, data = {switch = nil, count = 5, module = 7}},
+        {name = "M6F", states = gstates2, state = 1, data = {switch = nil, count = 6, module = 7}},
+        {name = "M6G", states = gstates2, state = 1, data = {switch = nil, count = 7, module = 7}},
+        {name = "M6H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 7}},
       }
     },
     { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(8)
       items = {
-        {name = "M8A", states = gstates2, state = 1, data = {switch = "se", count = 1, module = 8}},
-        {name = "M8B", states = gstates2, state = 1, data = {switch = nil, count = 2, module = 8}},
-        {name = "M8C", states = gstates2, state = 1, data = {switch = nil, count = 3, module = 8}},
-        {name = "M8D", states = gstates2, state = 1, data = {switch = nil, count = 4, module = 8}},
-        {name = "M8E", states = gstates2, state = 1, data = {switch = nil, count = 5, module = 8}},
-        {name = "M8F", states = gstates2, state = 1, data = {switch = nil, count = 6, module = 8}},
-        {name = "M8G", states = gstates2, state = 1, data = {switch = nil, count = 7, module = 8}},
-        {name = "M8H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 8}},
+        {name = "M7A", states = gstates2, state = 1, data = {switch = "se", count = 1, module = 8}},
+        {name = "M7B", states = gstates2, state = 1, data = {switch = nil, count = 2, module = 8}},
+        {name = "M7C", states = gstates2, state = 1, data = {switch = nil, count = 3, module = 8}},
+        {name = "M7D", states = gstates2, state = 1, data = {switch = nil, count = 4, module = 8}},
+        {name = "M7E", states = gstates2, state = 1, data = {switch = nil, count = 5, module = 8}},
+        {name = "M7F", states = gstates2, state = 1, data = {switch = nil, count = 6, module = 8}},
+        {name = "M7G", states = gstates2, state = 1, data = {switch = nil, count = 7, module = 8}},
+        {name = "M7H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 8}},
       }
     },
+    -- { -- template for digital/analog adapter RC-MultiAdapter-DA @ Address(8)
+    --   items = {
+    --     {name = "M8A", states = gstates2, state = 1, data = {switch = "se", count = 1, module = 8}},
+    --     {name = "M8B", states = gstates2, state = 1, data = {switch = nil, count = 2, module = 8}},
+    --     {name = "M8C", states = gstates2, state = 1, data = {switch = nil, count = 3, module = 8}},
+    --     {name = "M8D", states = gstates2, state = 1, data = {switch = nil, count = 4, module = 8}},
+    --     {name = "M8E", states = gstates2, state = 1, data = {switch = nil, count = 5, module = 8}},
+    --     {name = "M8F", states = gstates2, state = 1, data = {switch = nil, count = 6, module = 8}},
+    --     {name = "M8G", states = gstates2, state = 1, data = {switch = nil, count = 7, module = 8}},
+    --     {name = "M8H", states = gstates2, state = 1, data = {switch = nil, count = 8, module = 8}},
+    --   }
+    -- },
     { -- template for digital/analog adapter RC-MultiSwitch/Adapter-DA global module configuration
       config = true; -- enables globalParameters
       items = {
