@@ -43,11 +43,8 @@ local menu = {
 local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru"}, values = {0, 1, 2, 3, 4, 5, 6}};
 
 -- used as global module config : parameter 14 is used also to learn module address
-local globalParameters = {names = {"Learn-Ch/Adr", "TMpx", "Test"}, values = {14, 7, 8}};
+local globalParameters = {names = {"Learn Ch/A", "TMpx", "TMode", "OMpx"}, values = {14, 7, 8, 9}};
 
-local defaultFilename = "/MODELS/swstd.lua";
-local defaultFilenameM = "/MODELS/swstdm.lua";
-local defaultFilenameS = "/MODELS/swstdx.lua";
 local cfgName = nil;
 local config = nil;
 local lib = nil;
@@ -147,40 +144,14 @@ local function init(options)
   
   if (options) then
      if (options.Name) then
-	local filename = "/MODELS/" .. options.Name .. "lua";
-	cfgName = filename;
-	local fd = io.open(filename, "r");
-	if (fd) then
-	   local configFunction = loadfile(filename);
-	   if (configFunction) then
-	      config = configFunction();
-	   end
-	end
+	 local filename = lib.nameToConfigFilename(options.Name);
+	 config = lib.readConfig(filename, cfg);
      end
   end
   if not config then
-     local filename = "/MODELS/" .. model.getInfo().name .. ".lua";
-     cfgName = filename;
-     local fd = io.open(filename, "r");
-     if (fd) then
-	local configFunction = loadfile(filename);
-	if (configFunction) then
-	   config = configFunction();
-	end
-     end
+      local filename = lib.nameToConfigFilename(model.getInfo().name);
+      config = lib.readConfig(filename, cfg);
   end
-  if not config then
-    if (LCD_W <= 212) then
-      defaultFilename = defaultFilenameM;
-    end
-    if (LCD_W <= 128) then
-      defaultFilename = defaultFilenameS;
-    end
-    cfgName = defaultFilename;
-    config = loadfile(defaultFilename)();
-  end
-
-  config.cfgName = cfgName;
 
   if (config.menu) then
     menu = config.menu;
