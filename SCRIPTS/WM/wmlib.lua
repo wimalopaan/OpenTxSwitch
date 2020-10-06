@@ -492,13 +492,28 @@ local function readSpeedDials(menu)
    readMenuSwitch(menu);
 end
 
-local function readConfig(filename)
+local function readConfig(filename, cfg)
    local config = nil;
    local fd = io.open(filename, "r");
    if (fd) then
       local configFunction = loadfile(filename);
       if (configFunction) then
 	 config = configFunction();
+	 config.cfgName = filename;
+      end
+   else
+      if (cfg) then
+	 local f = cfg.defaultFilename;
+	 if (LCD_W <= 128) then
+	    f = cfg.defaultFilenameS;
+	 elseif (LCD_W <= 212) then
+	    f = cfg.defaultFilenameM;
+	 end
+	 local configFunction = loadfile(f);
+	 if (configFunction) then
+	    config = configFunction();
+	    config.cfgName = f;
+	 end
       end
    end
    return config;
@@ -507,8 +522,6 @@ end
 local function nameToConfigFilename(name)
    return "/MODELS/" .. name .. ".lua";
 end
-
-
 
 return {initMenu = initMenu, displayMenu = displayMenu,
 	displayInfo = displayInfo,

@@ -19,8 +19,6 @@
 local name = nil;
 local module = nil;
 local config = nil;
-local filename = nil;
-local ownConfigFound = false;
 
 -- Type: 0=Off, 1=PPM, 2 = XJT, 4 = LP45, 4 = DSM2, 4 = DSM4 5 = Crossfire, 6 = Multi, 7 = R9M, 13 = SBus via VBat
 
@@ -110,8 +108,10 @@ end
 local algoName = {"unknown", "xjt", "ibus", "sbus"};
 
 local lib = nil;
+
 local function init()
    lib = loadfile("/SCRIPTS/WM/wmlib.lua")();
+   local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
 
    if not (lib) then
       error("no lib!");
@@ -130,14 +130,9 @@ local function init()
       module = model.getModule(1);
    end
 
-   filename = lib.nameToConfigFilename(name);
+   local filename = lib.nameToConfigFilename(name);
+   config = lib.readConfig(filename, cfg);
    
-   config = lib.readConfig(filename);
-   if not (config) then
-      config = lib.readConfig("/MODELS/swstd.lua");
-   else
-      ownConfigFound = true;
-   end
 end
 
 local function drawScreenTitle(title)
@@ -205,13 +200,8 @@ local function refresh(event)
 	 y = y + dy;
       end
    end
-   if (filename) then
-      lcd.drawText(x, y, "File: " .. filename);
-      if (ownConfigFound) then
-	 lcd.drawText(x0, y, "yes");
-      else
-	 lcd.drawText(x0, y, "no");
-      end
+   if (config.cfgName) then
+      lcd.drawText(x, y, "File: " .. config.cfgName);
       y = y + dy;
    end
    if (config) then

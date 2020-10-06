@@ -43,9 +43,9 @@ local menu = {
    }
 }   
 
-local defaultFilename = "/MODELS/swstd.lua";
-local defaultFilenameM = "/MODELS/swstdm.lua";
-local defaultFilenameS = "/MODELS/swstdx.lua";
+--local defaultFilename = "/MODELS/swstd.lua";
+--local defaultFilenameM = "/MODELS/swstdm.lua";
+--local defaultFilenameS = "/MODELS/swstdx.lua";
 local config = nil;
 local lib = nil;
 local gVar = 5; -- fallback for digital switches
@@ -148,31 +148,31 @@ local function init(options)
       stateTimeout = cfg.stateTimeout;
    end
 
-   local cfgName = nil;
+--   local cfgName = nil;
    if (options) then
       if (options.Name) then
 	 local filename = lib.nameToConfigFilename(options.Name);
-	 cfgName = filename;
-	 config = lib.readConfig(filename);
+--	 cfgName = filename;
+	 config = lib.readConfig(filename, cfg);
       end
    end
    if not config then
       local filename = lib.nameToConfigFilename(model.getInfo().name);
-      cfgName = filename;
-      config = lib.readConfig(filename);
+--      cfgName = filename;
+      config = lib.readConfig(filename, cfg);
    end
-   if not config then
-      if (LCD_W <= 212) then
-	 defaultFilename = defaultFilenameM;
-      end
-      if (LCD_W <= 128) then
-	 defaultFilename = defaultFilenameS;
-      end
-      cfgName = defaultFilename;
-      config = loadfile(defaultFilename)();
-   end
+--   if not config then
+--      if (LCD_W <= 212) then
+--	 defaultFilename = defaultFilenameM;
+--      end
+--      if (LCD_W <= 128) then
+--	 defaultFilename = defaultFilenameS;
+--      end
+--      cfgName = defaultFilename;
+--      config = loadfile(defaultFilename)();
+--   end
 
-   config.cfgName = cfgName;
+--   config.cfgName = cfgName;
 
    if (config.menu) then
       menu = config.menu;
