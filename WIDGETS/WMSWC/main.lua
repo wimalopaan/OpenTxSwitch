@@ -40,7 +40,7 @@ local menu = {
 }   
 
 -- used as general module/channel config
-local parameters = {names = {"Res", "PWM", "B1/I", "B1/d", "B2/I", "B2/d", "PThru"}, values = {0, 1, 2, 3, 4, 5, 6}};
+local parameters = {names = {"Res", "PWM", "B1i", "B1d", "B2i", "B2d", "PT", "Ck"}, values = {0, 1, 2, 3, 4, 5, 6, 10}};
 
 -- used as global module config : parameter 14 is used also to learn module address
 local globalParameters = {names = {"Learn Ch/A", "TMpx", "TMode", "OMpx"}, values = {14, 7, 8, 9}};
