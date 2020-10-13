@@ -148,12 +148,12 @@ local function init(options)
       stateTimeout = cfg.stateTimeout;
    end
 
---   if (options) then
---      if (options.Name) then
---	 local filename = lib.nameToConfigFilename(options.Name);
---	 config = lib.readConfig(filename, cfg);
---      end
---   end
+   if (options) then
+      if (options.Name) then
+	 local filename = lib.nameToConfigFilename(options.Name);
+	 config = lib.readConfig(filename, nil);
+      end
+   end
    if not config then
       local filename = lib.nameToConfigFilename(model.getInfo().name);
       config = lib.readConfig(filename, cfg);
