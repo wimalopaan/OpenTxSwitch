@@ -142,12 +142,12 @@ local function init(options)
 
   lib.broadcastReset(gVar);
   
-  if (options) then
-     if (options.Name) then
-	 local filename = lib.nameToConfigFilename(options.Name);
-	 config = lib.readConfig(filename, cfg);
-     end
-  end
+--  if (options) then
+--     if (options.Name) then
+--	 local filename = lib.nameToConfigFilename(options.Name);
+--	 config = lib.readConfig(filename, cfg);
+--     end
+--  end
   if not config then
       local filename = lib.nameToConfigFilename(model.getInfo().name);
       config = lib.readConfig(filename, cfg);
@@ -157,7 +157,7 @@ local function init(options)
     menu = config.menu;
   end
 
-  menu.title = menu.title.. " - Config";
+  menu.title = menu.title .. " - Config";
 
   if (config.useSbus > 0) then
      encode = lib.encodeFunctionSbus;

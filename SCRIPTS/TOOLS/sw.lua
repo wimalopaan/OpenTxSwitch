@@ -208,6 +208,10 @@ local function refresh(event)
       lcd.drawText(x, y, "Sbus: " .. config.useSbus);
       y = y + dy;
    end
+   if (config) then
+      lcd.drawText(x, y, "Cfg: " .. config.name);
+      y = y + dy;
+   end
 
    local t1 = needSBus(module) and "yes" or "no";   
    lcd.drawText(x, y, "Need Sbus: " .. t1);
