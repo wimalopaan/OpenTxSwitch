@@ -221,7 +221,7 @@ local function initMenu(menu, select, version, showShortCuts)
 	 menu.overlays[s] = {pagelist = list, last = 0};
 	 if (showShortCuts) then
 	    for p,item in pairs(list) do 
-	       item.name = item.name .. "!";
+	       item.name = item.name .. "*";
 	    end
 	 end
       end
