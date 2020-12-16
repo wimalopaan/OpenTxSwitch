@@ -67,6 +67,8 @@ local function sendRemote()
       return;
    end
 
+--   print("sr");
+   
    local r = (getValue(menu.remote) + 1024) / 2;
 
    if (r == lastRemote) then
@@ -223,8 +225,8 @@ local options = {
    { "Next",     SOURCE, 8},
    { "Previous", SOURCE, 9},
    { "Select",   SOURCE, 10},
-   { "Up",       SOURCE, 0},
-   { "Down",     SOURCE, 0}
+   { "Up",       SOURCE, 32},
+   { "Down",     SOURCE, 32}
 --   { "Name", STRING, "swstd"}  -- bug in OpenTX?
 }
 

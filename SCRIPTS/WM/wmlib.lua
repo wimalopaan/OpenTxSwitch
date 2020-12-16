@@ -359,7 +359,19 @@ end
 local function processEvents(menu, event, pie)
 --   print("ev:", event, EVT_VIRTUAL_DEC, EVT_VIRTUAL_PREV);
    local p = menu.state.activePage;
-   if (event == EVT_VIRTUAL_DEC) then -- up
+   if (event == 42) then
+      nextCol(menu);
+      return 1;
+   elseif (event == 43) then
+      prevCol(menu);
+      return 1;
+   elseif (event == 44) then
+      nextRow(menu);
+      return 1;
+   elseif (event == 45) then
+      prevRow(menu);
+      return 1;
+   elseif (event == EVT_VIRTUAL_DEC) then -- up
       if (EVT_VIRTUAL_DEC == EVT_VIRTUAL_PREV) then -- scroll
 	 prevCol(menu);
       else
@@ -374,10 +386,10 @@ local function processEvents(menu, event, pie)
       end
       return 1;
    elseif (event == 100) or (event == EVT_VIRTUAL_NEXT) then
-      nextCol(menu);
+      nextRow(menu);
       return 1;
    elseif (event == 101) or (event == EVT_VIRTUAL_PREV) then
-      prevCol(menu);
+      prevRow(menu);
       return 1;
    elseif (event == EVT_VIRTUAL_ENTER) then
       if (menu.state.activeRow > 0) then
@@ -396,6 +408,8 @@ local buttons = {
    lastp = 0,
    lastl = 0,
    lastr = 0,
+   lastu = 0,
+   lastd = 0,
    lasts = 0,
    lastm = 0
 }
@@ -405,30 +419,34 @@ local function readButtons(pie)
    if (pie.options.Next) then
       local nv = getValue(pie.options.Next);
       if (nv > buttons.lastn) then
-	 e = EVT_VIRTUAL_INC;
+--	 e = EVT_VIRTUAL_INC;
+      	 e = 42;
       end
       buttons.lastn = nv;
    end
    if (pie.options.Previous) then
       local pv = getValue(pie.options.Previous);
       if (pv > buttons.lastp) then
-	 e = EVT_VIRTUAL_DEC;
+--	 e = EVT_VIRTUAL_DEC;
+	 e = 43;
       end
       buttons.lastp = pv;
    end
-   if (pie.options.Left) then
-      local lv = getValue(pie.options.Left);
-      if (lv > buttons.lastl) then
-	 e = EVT_VIRTUAL_PREV;
+   if (pie.options.Up) then
+      local lu = getValue(pie.options.Up);
+      if (lu > buttons.lastu) then
+--	 e = EVT_VIRTUAL_PREV;
+	 e = 44;
       end
-      buttons.lastl = lv;
+      buttons.lastu = lu;
    end
-   if (pie.options.Right) then
-      local rv = getValue(pie.options.Right);
-      if (rv > buttons.lastr) then
-	 e =  EVT_VIRTUAL_NEXT;
+   if (pie.options.Down) then
+      local dv = getValue(pie.options.Down);
+      if (dv > buttons.lastd) then
+--	 e =  EVT_VIRTUAL_NEXT;
+	 e =  45;
       end
-      buttons.lastr = rv;
+      buttons.lastd = dv;
    end
    if (pie.options.Select) then
       local sv = getValue(pie.options.Select);
@@ -437,6 +455,7 @@ local function readButtons(pie)
       end
       buttons.lasts = sv;
    end
+--   print("rb: ", e);
    return e;
 end 
 

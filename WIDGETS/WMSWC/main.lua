@@ -196,8 +196,8 @@ local options = {
   { "Next",     SOURCE, 8 },
   { "Previous", SOURCE, 9 },
   { "Select",   SOURCE, 10 },
-  { "Left",     SOURCE, 11 },
-  { "Right",    SOURCE, 12 }
+  { "Up",       SOURCE, 0 },
+  { "Down",     SOURCE, 0 }
 }
 
 local function create(zone, options)
