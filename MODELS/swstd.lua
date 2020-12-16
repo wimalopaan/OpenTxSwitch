@@ -30,6 +30,8 @@ local menu = {
   
   pageSwitch = "6pos";
 
+  remote = "trn16";
+
   state = {
     activeRow = 1,
     activeCol = 1,

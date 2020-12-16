@@ -63,10 +63,14 @@ local scaleParameter = nil;
 
 local function pushValue()
   local dt = getTime() - lastSelection.time;
-  if (followHasRun and (dt > 10) and lastSelection.item and (lastSelection.col > 0)) then
-    local v = scaleParameter(getValue(menu.parameterDial));
-    local pv = lastSelection.item.stateValues[lastSelection.col];
-    lib.sendValue(gVar, encodeParam(pv, v));
+  if (followHasRun and (dt > 10)) then
+     if (lastSelection.item and (lastSelection.col > 0)) then
+	local v = scaleParameter(getValue(menu.parameterDial));
+	local pv = lastSelection.item.stateValues[lastSelection.col];
+	lib.sendValue(gVar, encodeParam(pv, v));
+     else
+	lib.sendValue(gVar, encodeParam(0, 0)); -- send reset/nothing
+     end
   end
 end
 
@@ -88,7 +92,7 @@ local function select(item, menu)
   lastSelection.item = item;
   lastSelection.col = menu.state.activeCol;
   item.state = menu.state.activeCol;
-  lib.broadcastReset(gVar);
+  lib.broadcastOff(gVar);
   lastSelection.time = getTime();
   followHasRun = false;
 end
@@ -140,7 +144,7 @@ local function init(options)
     gVarOffset = cfg.offsetGVar;
   end
 
-  lib.broadcastReset(gVar);
+  lib.broadcastOff(gVar);
   
   if (options) then
      if (options.Name) then
@@ -211,14 +215,18 @@ end
 
 local lastVisible = 0;
 
-local function background()
+local function backgroundLocal()
    if ((getTime() - lastVisible) > 30) and (lastVisible > 0) then
       model.setGlobalVariable(gVar + 1, 0, 0);
       lastVisible = 0;
       lastSelection.item = nil;
       lastSelection.col = 0;
-      lib.broadcastReset(gVar);
+--      lib.broadcastOff(gVar);
    end
+end
+
+local function backgroundFull()
+   backgroundLocal();
 end
 
 local function refresh(pie, event)
@@ -227,4 +235,4 @@ local function refresh(pie, event)
    run(event, pie);
 end
 
-return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=background, init=init, run=run}
+return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=backgroundFull, backgroundLocal=backgroundLocal, init=init, run=run}

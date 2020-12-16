@@ -21,6 +21,8 @@ local menu = {
 
    pageSwitch = "6p";
 
+   remote = "trn16";
+   
    state = {
       activeRow = 1,
       activeCol = 1,
@@ -57,6 +59,37 @@ local queue = {};
 
 local encode = nil;
 
+local lastRemote = 0;
+-- local rdbg = 0;
+
+local function sendRemote()
+   if (not menu.remote) then
+      return;
+   end
+
+   local r = (getValue(menu.remote) + 1024) / 2;
+
+   if (r == lastRemote) then
+      return;
+   end
+   lastRemote = r;
+   
+   local st = bit32.extract(r, 0, 3) + 1;
+   local it = bit32.extract(r, 3, 3) + 1;
+   local mo = bit32.extract(r, 6, 3) + 1;
+
+   local d = {state = st, data = {count = it, module = mo}};   
+   queue:push(d);
+
+--   rdbg = st + 10 * it + 100 * mo;
+
+   for i, item in ipairs(menu.allItems) do
+      if ((item.data.count == it) and (item.data.module == mo)) then
+	 item.state = st;
+      end
+   end   
+end
+
 local function sendShortCuts() 
    for name,s in pairs(menu.shortCuts) do
       local ns = lib.switchState(name);
@@ -86,7 +119,7 @@ local lastbg = getTime();
 local lastbg1 = getTime();
 local cycle = 1;
 
-local function background()
+local function backgroundLocal()
    if (model.getGlobalVariable(gVar + 1, 0) > 0) then
       return;
    end
@@ -114,6 +147,11 @@ local function background()
    end
 end
 
+local function backgroundFull()
+   backgroundLocal();
+   sendRemote();
+end
+
 local function select(item, menu)
    if (not item) then
       return;
@@ -126,6 +164,7 @@ end
 local function procAndDisplay(event, pie)
    lib.processEvents(menu, event, pie);
    lib.displayMenu(menu, event, pie, config);
+--   lib.displayInfo(pie, rdbg);
 end
 
 local function run(event, pie)
@@ -184,7 +223,9 @@ local options = {
    { "Next",     SOURCE, 8},
    { "Previous", SOURCE, 9},
    { "Select",   SOURCE, 10},
-   { "Name", STRING, "swstd"}  -- bug in OpenTX?
+   { "Up",       SOURCE, 0},
+   { "Down",     SOURCE, 0}
+--   { "Name", STRING, "swstd"}  -- bug in OpenTX?
 }
 
 local function create(zone, options)
@@ -200,8 +241,8 @@ local function update(pie, options)
 end
 
 local function refresh(pie)
-   background();
+   backgroundFull();
    run(nil, pie);
 end
 
-return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=background, run=run, procAndDisplay=procAndDisplay}
+return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=backgroundFull, backgroundLocal=backgroundLocal, run=run, procAndDisplay=procAndDisplay}

@@ -34,7 +34,7 @@ local function init_telemetry()
 end
 
 local function bg_telemetry()
-   widget.background();
+   widget.backgroundLocal();
 end
 
 return {run=run_telemetry, init=init_telemetry, background=bg_telemetry}

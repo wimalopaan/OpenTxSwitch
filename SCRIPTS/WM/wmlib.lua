@@ -80,10 +80,20 @@ local function sendValue(gvar, value)
    model.setGlobalVariable(gvar, getFlightMode(), value);
 end
 
-local function broadcastReset(gvar) 
-   --  print("bcast reset");
+local function broadcastOff(gvar) 
+   --  print("bcast off");
    sendValue(gvar, encodeParameter(15, 31)); -- broadcast, turn off all outputs
 end 
+
+local function broadcastReset(gvar) 
+   --  print("bcast reset");
+   sendValue(gvar, encodeParameter(15, 2)); -- broadcast, reset all channels
+end 
+
+--local function broadcastParam(gvar) 
+--   --  print("bcast param");
+--   sendValue(gvar, encodeParameter(15, 4)); -- broadcast, next value after selection is parameter
+--end 
 
 local function switchState(s)
    local v = getValue(s);
@@ -528,7 +538,8 @@ return {initMenu = initMenu, displayMenu = displayMenu,
 	encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
 	processEvents = processEvents,
 	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, readMenuSwitch=readMenuSwitch,
-	broadcastReset = broadcastReset,
+	broadcastReset = broadcastReset, broadcastOff = broadcastOff,
+	--broadcastParam = broadcastParam,
 	encodeFunctionSbus = encodeFunctionSbus, encodeParameterSbus = encodeParameterSbus, scaleParameterValueSbus = scaleParameterValueSbus,
 	readConfig = readConfig, nameToConfigFilename=nameToConfigFilename,
 	Class = Class};
