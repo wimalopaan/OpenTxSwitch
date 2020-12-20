@@ -486,7 +486,7 @@ local function readMenuSwitch(menu)
 	 buttons.lastm = ms;
 	 local s = 1;
 	 for i = 0,5 do
-	    if (ms <= (-1024 + i * (2048 / 5) + 0.5)) then
+	    if (ms <= (-1024 + (2 * i  + 1) * (2048 / 10))) then
 	       s = i + 1;
 	       break;
 	    end
