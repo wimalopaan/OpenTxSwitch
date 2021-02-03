@@ -29,6 +29,7 @@ local menu = {
   parameterDial = "s1",
   
   pageSwitch = "6pos";
+--  pageSwitch = "ext1";
 
   remote = "trn16";
 

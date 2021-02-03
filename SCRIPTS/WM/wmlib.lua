@@ -164,6 +164,11 @@ local function initMenu(menu, select, version, showShortCuts)
    local msFI = getFieldInfo(menu.pageSwitch);
    if (msFI) then
       menu.msFI= msFI.id;
+      if (string.find(menu.pageSwitch, "6pos")) then
+	 menu.msdiv = 10;
+      else
+	 menu.msdiv = math.max(2, 2 * (#menu.pages - 1));
+      end
    end
 
    menu.state.activeRow = 0;
@@ -469,7 +474,7 @@ end
 
 local function inputToMenuCol(name, menu) 
    local p = menu.state.activePage;
-   if (menu.state.activeRow > 0) then
+   if ((menu.state.activeRow > 0) and (menu.state.activeRow <= #p.items)) then
       local n = #p.items[menu.state.activeRow].states;
       local v = getValue(name) + 1024;
       local l = math.floor((v * n) / 2049) + 1;
@@ -486,7 +491,7 @@ local function readMenuSwitch(menu)
 	 buttons.lastm = ms;
 	 local s = 1;
 	 for i = 0,5 do
-	    if (ms <= (-1024 + (2 * i  + 1) * (2048 / 10))) then
+	    if (ms <= (-1024 + (2 * i  + 1) * (2048 / menu.msdiv))) then
 	       s = i + 1;
 	       break;
 	    end

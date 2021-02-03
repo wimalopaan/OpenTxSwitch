@@ -12,7 +12,7 @@
 -- all further principals of tranferring state and other information.
 
 return {
-   version = "1.03",
+   version = "1.04",
    switchGVar = 5, -- gVar for use with digital wm-switches
    offsetGVar = 5, -- gVars to use tiptip switches (each has to use its own channel), starting from (offsetGVar + 1)
    stateTimeout = 10, -- 100ms for each state to propagate
