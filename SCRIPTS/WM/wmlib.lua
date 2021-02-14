@@ -487,7 +487,7 @@ local function readMenuSwitch(menu)
    if (menu.msFI) then
       local ms = 0;
       ms = getValue(menu.msFI);
-      if not (ms == buttons.lastm) then
+      if (math.abs(ms - buttons.lastm) > 10) then
 	 buttons.lastm = ms;
 	 local s = 1;
 	 for i = 0,5 do

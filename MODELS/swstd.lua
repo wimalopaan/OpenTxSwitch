@@ -151,10 +151,10 @@ local menu = {
         {name = "Mod@2", states = {}, state = 1, data = {switch = nil, count = 1, module = 2}},
         {name = "Mod@3", states = {}, state = 1, data = {switch = nil, count = 1, module = 3}},
         {name = "Mod@4", states = {}, state = 1, data = {switch = nil, count = 1, module = 4}},
-        {name = "Mod@5", states = {}, state = 1, data = {switch = nil, count = 2, module = 5}},
-        {name = "Mod@6", states = {}, state = 1, data = {switch = nil, count = 3, module = 6}},
-        {name = "Mod@7", states = {}, state = 1, data = {switch = nil, count = 4, module = 7}},
-        {name = "Mod@8", states = {}, state = 1, data = {switch = nil, count = 8, module = 8}},
+        {name = "Mod@5", states = {}, state = 1, data = {switch = nil, count = 1, module = 5}},
+        {name = "Mod@6", states = {}, state = 1, data = {switch = nil, count = 1, module = 6}},
+        {name = "Mod@7", states = {}, state = 1, data = {switch = nil, count = 1, module = 7}},
+        {name = "Mod@8", states = {}, state = 1, data = {switch = nil, count = 1, module = 8}},
       }
     }
   }
