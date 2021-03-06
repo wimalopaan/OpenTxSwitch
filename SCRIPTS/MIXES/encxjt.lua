@@ -16,9 +16,9 @@ local output = { "encxjt" }
 
 local gvar = 5; -- fallback
 
-local offset1 = 0.5;
---local offset2 = 0.1; -- x12s ???
-local offset2 = 0.0; -- x9e
+local offset1  =  0.5;
+local offset2E = -0.5;
+local offset2O =  0.5;
 
 local function init() 
   local cfg = loadfile("/SCRIPTS/CONFIG/wmcfg.lua")();
@@ -29,10 +29,15 @@ end
 
 local function run()
    local x = model.getGlobalVariable(gvar, 0);
+   local b = bit32.extract(x, 4);
    if (x >= 0) then
       return (x * 1024) / 1638 + offset1;
    else
-      return (x * 1024) / 1638 + offset2;
+      if (b == 0) then
+	 return (x * 1024) / 1638 + offset2E;
+      else
+	 return (x * 1024) / 1638 + offset2O;
+      end
    end
 end
 
