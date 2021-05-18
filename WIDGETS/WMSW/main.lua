@@ -21,7 +21,8 @@ local menu = {
 
    pageSwitch = "6p";
 
-   remote = "trn16";
+--   remote = "trn16";
+   remote = nil; -- deactivated
    
    state = {
       activeRow = 1,
@@ -67,8 +68,6 @@ local function sendRemote()
       return;
    end
 
---   print("sr");
-   
    local r = (getValue(menu.remote) + 1024) / 2;
 
    if (r == lastRemote) then
