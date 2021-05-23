@@ -148,8 +148,12 @@ local function findSwitch(menu, name)
 end
 
 local function initMenu(menu, select, version, showShortCuts)
-   if (version) then
-      menu.title = menu.title .. " " .. version;
+   if not (menu.titlev) then
+      if (version) then
+	 menu.titlev = menu.title .. " " .. version;
+      else
+	 menu.titlev = menu.title;
+      end
    end
    local lsFI = getFieldInfo(menu.scrollUpDn);
    if (lsFI) then
@@ -259,9 +263,9 @@ end
 local function displayMenu(menu, event, pie, config)  
    if (lcd.drawScreenTitle) then
       lcd.clear()
-      lcd.drawScreenTitle(menu.title, menu.state.activePage.number, #menu.pages);
+      lcd.drawScreenTitle(menu.titlev, menu.state.activePage.number, #menu.pages);
    else  
-      lcd.drawText(pie.zone.x, pie.zone.y, menu.title, MIDSIZE);
+      lcd.drawText(pie.zone.x, pie.zone.y, menu.titlev, MIDSIZE);
       displayHeader(pie, menu.state.activePage.desc);
    end
 
