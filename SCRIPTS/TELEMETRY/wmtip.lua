@@ -13,14 +13,22 @@
 
 
 local pie = {};
-pie.zone = {};
-pie.zone.x = 0;
-pie.zone.y = 0;
-pie.zone.w = LCD_W;
-pie.zone.h = LCD_H;
-pie.zone.fh = 8;
-pie.zone.y_offset = 8;
-pie.zone.y_poffset = 0;
+--pie.zone = {};
+--pie.zone.x = 0;
+--pie.zone.y = 0;
+--pie.zone.w = LCD_W;
+--pie.zone.h = LCD_H;
+--pie.zone.fh = 8;
+--pie.zone.y_offset = 8;
+--pie.zone.y_poffset = 0;
+
+pie.win = {};
+pie.win.x = 0;
+pie.win.y = 0;
+pie.win.w = LCD_W;
+pie.win.h = LCD_H;
+pie.win.fh = 8;
+pie.win.y_offset = 8;
 
 local widget = nil;
 

@@ -117,7 +117,7 @@ local function printParameter(pie)
   if (lastSelection.item) then
      attr = attr + INVERS;
   end
-  lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + pie.zone.y_poffset, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), attr);
+  lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.y_poffset, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), attr);
 end
 
 local function run(event, pie)
@@ -202,10 +202,17 @@ local options = {
 
 local function create(zone, options)
   init(options);
-  zone.fh = 16;
-  zone.y_poffset = zone.fh;
-  zone.y_offset = 32;
-  local pie = { zone=zone, options=options, counter=0 };
+--  zone.fh = 16;
+--  zone.y_poffset = zone.fh;
+--  zone.y_offset = 32;
+--  local pie = { zone=zone, options=options, counter=0 };
+   local pie = {};
+   pie.zone = zone;
+   pie.options = options;
+   pie.win = {};
+   pie.win.fh = 16;
+   pie.win.y_offset = 32;
+   pie.win.y_poffset = 16;
   return pie;
 end
 
@@ -232,6 +239,17 @@ end
 local function refresh(pie, event)
    lastVisible = getTime();
    model.setGlobalVariable(gVar + 1, 0, 1);
+   if (event) then -- fullscreen
+      pie.win.x = 0;
+      pie.win.y = 0;
+      pie.win.w = LCD_W;
+      pie.win.h = LCD_H;
+   else
+      pie.win.x = pie.zone.x;
+      pie.win.y = pie.zone.y;
+      pie.win.w = pie.zone.w;
+      pie.win.h = pie.zone.h;
+   end
    run(event, pie);
 end
 

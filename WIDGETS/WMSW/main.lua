@@ -231,9 +231,14 @@ local options = {
 
 local function create(zone, options)
    init(options);
-   zone.fh = 16;
-   zone.y_offset = 32;
-   local pie = { zone=zone, options=options};
+--   zone.fh = 16; -- font height
+--   zone.y_offset = 32; -- absolute offset
+   local pie = {};
+   pie.zone = zone;
+   pie.options = options;
+   pie.win = {};
+   pie.win.fh = 16;
+   pie.win.y_offset = 32;
    return pie;
 end
 
@@ -241,9 +246,20 @@ local function update(pie, options)
    pie.options = options;
 end
 
-local function refresh(pie)
+local function refresh(pie, event)
    backgroundFull();
-   run(nil, pie);
+   if (event) then -- fullscreen
+      pie.win.x = 0;
+      pie.win.y = 0;
+      pie.win.w = LCD_W;
+      pie.win.h = LCD_H;
+   else
+      pie.win.x = pie.zone.x;
+      pie.win.y = pie.zone.y;
+      pie.win.w = pie.zone.w;
+      pie.win.h = pie.zone.h;
+   end
+   run(event, pie);
 end
 
 return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=backgroundFull, backgroundLocal=backgroundLocal, run=run, procAndDisplay=procAndDisplay}

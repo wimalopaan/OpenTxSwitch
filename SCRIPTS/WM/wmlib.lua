@@ -249,23 +249,24 @@ local function initMenu(menu, select, version, showShortCuts)
 end
 
 local function displayFooter(pie, text)
-   lcd.drawText(pie.zone.x, pie.zone.y + pie.zone.h - pie.zone.fh, text, SMLSIZE);
+   lcd.drawText(pie.win.x, pie.win.y + pie.win.h - pie.win.fh, text, SMLSIZE);
 end
 
 local function displayHeader(pie, text)
-   lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y, text, SMLSIZE);
+   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y, text, SMLSIZE);
 end
 
 local function displayInfo(pie, text)
-   lcd.drawText(pie.zone.x + pie.zone.w - 60, pie.zone.y + pie.zone.fh, text, SMLSIZE);
+   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.fh, text, SMLSIZE);
 end
 
-local function displayMenu(menu, event, pie, config)  
+local function displayMenu(menu, event, pie, config)
+--   print("z: ", pie.win.x, pie.win.y, pie.win.w, pie.win.h);
    if (lcd.drawScreenTitle) then
       lcd.clear()
       lcd.drawScreenTitle(menu.titlev, menu.state.activePage.number, #menu.pages);
    else  
-      lcd.drawText(pie.zone.x, pie.zone.y, menu.titlev, MIDSIZE);
+      lcd.drawText(pie.win.x, pie.win.y, menu.titlev, MIDSIZE);
       displayHeader(pie, menu.state.activePage.desc);
    end
 
@@ -282,11 +283,11 @@ local function displayMenu(menu, event, pie, config)
    local p = menu.state.activePage;
 
    for row, opt in ipairs(p.items) do
-      local x = pie.zone.x;
-      local y = pie.zone.y + pie.zone.y_offset + (row - 1) * pie.zone.fh;
+      local x = pie.win.x;
+      local y = pie.win.y + pie.win.y_offset + (row - 1) * pie.win.fh;
       local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
       lcd.drawText(x, y, opt.name, attr);
-      local fw = pie.zone.w / (#opt.states + 1);
+      local fw = pie.win.w / (#opt.states + 1);
       for col, st in ipairs(opt.states) do
 	 x = x + fw;
 	 attr = SMLSIZE;
@@ -366,7 +367,9 @@ local function prevCol(menu) -- with line and page wrap
 end
 
 local function processEvents(menu, event, pie)
---   print("ev:", event, EVT_VIRTUAL_DEC, EVT_VIRTUAL_PREV);
+--   if event > 0 then
+--      print("ev:", event, EVT_VIRTUAL_DEC, EVT_VIRTUAL_PREV);
+--   end
    local p = menu.state.activePage;
    if (event == 42) then
       nextCol(menu);
@@ -378,6 +381,18 @@ local function processEvents(menu, event, pie)
       nextRow(menu);
       return 1;
    elseif (event == 45) then
+      prevRow(menu);
+      return 1;
+   elseif (event == 0x601) then
+      nextCol(menu);
+      return 1;
+   elseif (event == 0x600) then
+      prevCol(menu);
+      return 1;
+   elseif (event == 0x1004) then
+      nextRow(menu);
+      return 1;
+   elseif (event == 0x1003) then
       prevRow(menu);
       return 1;
    elseif (event == EVT_VIRTUAL_DEC) then -- up
@@ -401,6 +416,11 @@ local function processEvents(menu, event, pie)
       prevRow(menu);
       return 1;
    elseif (event == EVT_VIRTUAL_ENTER) then
+      if (menu.state.activeRow > 0) then
+	 --      print("X: ", p.items[menu.state.activeRow]);
+	 menu.cb(p.items[menu.state.activeRow], menu);
+      end
+   elseif (event == 0x602) then
       if (menu.state.activeRow > 0) then
 	 --      print("X: ", p.items[menu.state.activeRow]);
 	 menu.cb(p.items[menu.state.activeRow], menu);
