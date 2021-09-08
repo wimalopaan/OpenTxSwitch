@@ -244,11 +244,13 @@ local function refresh(pie, event)
       pie.win.y = 0;
       pie.win.w = LCD_W;
       pie.win.h = LCD_H;
+      pie.win.fh = 24;
    else
       pie.win.x = pie.zone.x;
       pie.win.y = pie.zone.y;
       pie.win.w = pie.zone.w;
       pie.win.h = pie.zone.h;
+      pie.win.fh = 16;
    end
    run(event, pie);
 end

@@ -288,6 +288,7 @@ local function displayMenu(menu, event, pie, config)
       local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
       lcd.drawText(x, y, opt.name, attr);
       local fw = pie.win.w / (#opt.states + 1);
+      opt.rects = {};
       for col, st in ipairs(opt.states) do
 	 x = x + fw;
 	 attr = SMLSIZE;
@@ -299,6 +300,8 @@ local function displayMenu(menu, event, pie, config)
 	    end
 	 end
 	 lcd.drawText(x, y, st, attr);
+	 rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
+	 opt.rects[col] = rect;
       end
    end
 end
@@ -550,6 +553,34 @@ local function readSpeedDials(menu)
    readMenuSwitch(menu);
 end
 
+local function covers(touch, item) 
+   if ((touch.x >= item.xmin) and (touch.x <= item.xmax) and (touch.y >= item.ymin) and (touch.y <= item.ymax)) then
+      return true;
+   end
+   return false;
+end
+
+local function processTouch(menu, event, touch)
+   if (touch) then
+      if (event == EVT_TOUCH_TAP) then
+	 lcd.drawText(LCD_W - 60, 24, "x:" .. touch.x .. "y:" .. touch.y, SMLSIZE);
+	 --print("touch: ", event, touch.x, touch.y);
+	 
+	 local p = menu.state.activePage;
+	 
+	 for row, opt in ipairs(p.items) do
+	    for col, r in ipairs(opt.rects) do   
+	       if (covers(touch, r)) then
+		  menu.state.activeRow = row;
+		  menu.state.activeCol = col;
+	       end
+	    end
+	 end
+      end
+   end
+end
+
+
 local function readConfig(filename, cfg)
    local config = nil;
    local fd = io.open(filename, "r");
@@ -587,6 +618,7 @@ return {initMenu = initMenu, displayMenu = displayMenu,
 	processEvents = processEvents,
 	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, readMenuSwitch=readMenuSwitch,
 	broadcastReset = broadcastReset, broadcastOff = broadcastOff,
+	processTouch = processTouch,
 	--broadcastParam = broadcastParam,
 	encodeFunctionSbus = encodeFunctionSbus, encodeParameterSbus = encodeParameterSbus, scaleParameterValueSbus = scaleParameterValueSbus,
 	readConfig = readConfig, nameToConfigFilename=nameToConfigFilename,

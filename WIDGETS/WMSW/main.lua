@@ -168,12 +168,13 @@ local function procAndDisplay(event, pie)
 --   lib.displayInfo(pie, rdbg);
 end
 
-local function run(event, pie)
+local function run(event, pie, touch)
    if not event then
       event = lib.readButtons(pie);
    end
    lib.readSpeedDials(menu);
    procAndDisplay(event, pie);
+   lib.processTouch(menu, event, touch);
 end
 
 local function init(options)
@@ -246,20 +247,22 @@ local function update(pie, options)
    pie.options = options;
 end
 
-local function refresh(pie, event)
+local function refresh(pie, event, touch)
    backgroundFull();
    if (event) then -- fullscreen
       pie.win.x = 0;
       pie.win.y = 0;
       pie.win.w = LCD_W;
       pie.win.h = LCD_H;
+      pie.win.fh = 24;
    else
       pie.win.x = pie.zone.x;
       pie.win.y = pie.zone.y;
       pie.win.w = pie.zone.w;
       pie.win.h = pie.zone.h;
+      pie.win.fh = 16;
    end
-   run(event, pie);
+   run(event, pie, touch);
 end
 
 return { name="WMSwitch", options=options, create=create, update=update, refresh=refresh, init=init, background=backgroundFull, backgroundLocal=backgroundLocal, run=run, procAndDisplay=procAndDisplay}
