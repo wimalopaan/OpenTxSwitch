@@ -120,16 +120,17 @@ local function printParameter(pie)
   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.y_poffset, "V: " .. tostring(percent(r)) .. "%/" .. tostring(v), attr);
 end
 
-local function run(event, pie)
+local function run(event, pie, touch)
+  lib.displayMenu(menu, event, pie, config);
   if not event then
     event = lib.readButtons(pie);
   end
   local r = lib.readMenuSwitch(menu);
   r = r + lib.processEvents(menu, event, pie);
+  r = r + lib.processTouch(menu, event, touch);
   if (r > 0) then
      deselectAll();
   end
-  lib.displayMenu(menu, event, pie, config);
   printParameter(pie);  
   selectFollow();
   pushValue();
@@ -236,7 +237,7 @@ local function backgroundFull()
    backgroundLocal();
 end
 
-local function refresh(pie, event)
+local function refresh(pie, event, touch)
    lastVisible = getTime();
    model.setGlobalVariable(gVar + 1, 0, 1);
    if (event) then -- fullscreen
@@ -252,7 +253,7 @@ local function refresh(pie, event)
       pie.win.h = pie.zone.h;
       pie.win.fh = 16;
    end
-   run(event, pie);
+   run(event, pie, touch);
 end
 
 return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=backgroundFull, backgroundLocal=backgroundLocal, init=init, run=run}

@@ -282,6 +282,9 @@ local function displayMenu(menu, event, pie, config)
    end
    local p = menu.state.activePage;
 
+--   menu.rows = {};
+--   menu.cols = {};
+   
    for row, opt in ipairs(p.items) do
       local x = pie.win.x;
       local y = pie.win.y + pie.win.y_offset + (row - 1) * pie.win.fh;
@@ -302,6 +305,13 @@ local function displayMenu(menu, event, pie, config)
 	 lcd.drawText(x, y, st, attr);
 	 rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
 	 opt.rects[col] = rect;
+	 if (event) then
+	    if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
+	       lcd.drawRectangle(x - 2, y - 2, fw - 4, pie.win.fh - 4, ORANGE);
+	    else
+	       lcd.drawRectangle(x - 2, y - 2, fw - 4, pie.win.fh - 4, GREY);
+	    end
+	 end
       end
    end
 end
@@ -562,22 +572,28 @@ end
 
 local function processTouch(menu, event, touch)
    if (touch) then
+      local p = menu.state.activePage;
       if (event == EVT_TOUCH_TAP) then
-	 lcd.drawText(LCD_W - 60, 24, "x:" .. touch.x .. "y:" .. touch.y, SMLSIZE);
-	 --print("touch: ", event, touch.x, touch.y);
-	 
-	 local p = menu.state.activePage;
-	 
 	 for row, opt in ipairs(p.items) do
 	    for col, r in ipairs(opt.rects) do   
 	       if (covers(touch, r)) then
 		  menu.state.activeRow = row;
 		  menu.state.activeCol = col;
+		  return 1;
 	       end
 	    end
 	 end
       end
+      if (event == EVT_TOUCH_SLIDE) then
+	 if (touch.swipeLeft) then
+	    menu.state.activePage = p.next;
+	 end
+	 if (touch.swipeRight) then
+	    menu.state.activePage = p.prev;
+	 end
+      end
    end
+   return 0;
 end
 
 

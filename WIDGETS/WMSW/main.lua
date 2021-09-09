@@ -169,11 +169,13 @@ local function procAndDisplay(event, pie)
 end
 
 local function run(event, pie, touch)
+   lib.displayMenu(menu, event, pie, config);
    if not event then
       event = lib.readButtons(pie);
    end
    lib.readSpeedDials(menu);
-   procAndDisplay(event, pie);
+   lib.processEvents(menu, event, pie);
+--   procAndDisplay(event, pie);
    lib.processTouch(menu, event, touch);
 end
 
