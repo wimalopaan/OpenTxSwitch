@@ -135,6 +135,15 @@ local function scaleParameterValueSbus(v)
    return math.floor(s);
 end
 
+local function findItem(menu, module, count)
+   for i, item in ipairs(menu.allItems) do
+      if (item.data.module == module) and (item.data.count == count) then
+	 return item;
+      end
+   end
+   return nil;
+end
+
 local function findSwitch(menu, name) 
    local list = {};
    for i,p in ipairs(menu.pages) do
@@ -631,6 +640,7 @@ end
 return {initMenu = initMenu, displayMenu = displayMenu,
 	displayInfo = displayInfo,
 	encodeFunction = encodeFunction, encodeParameter = encodeParameter, sendValue = sendValue, scaleParameterValue = scaleParameterValue,
+	findItem = findItem,
 	processEvents = processEvents,
 	readButtons = readButtons, readSpeedDials = readSpeedDials, switchState = switchState, readMenuSwitch=readMenuSwitch,
 	broadcastReset = broadcastReset, broadcastOff = broadcastOff,

@@ -51,7 +51,12 @@ local menu = {
 --local defaultFilenameS = "/MODELS/swstdx.lua";
 local config = nil;
 local lib = nil;
+
 local gVar = 5; -- fallback for digital switches
+-- using gVar:     value to mixer
+-- using (gVar+1): stop from config widget
+-- using (gVar+2): input from other widgets
+
 local stateTimeout = 10;  --fallback
 
 ----- nothing to setup below this line
@@ -62,6 +67,12 @@ local encode = nil;
 
 local lastRemote = 0;
 -- local rdbg = 0;
+
+local lastWidgetGV = 0;
+local function sendForeignWidget()
+   if not (model.getGlobalVariable(gVar + 2, 0) == lastWidgetGV) then
+   end   
+end
 
 local function sendRemote()
    if (not menu.remote) then
@@ -132,14 +143,18 @@ local function backgroundLocal()
 	 lastbg = t;
 	 lastbg1 = t;
 	 local i = queue:pop();
-	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
+	 if (i.data.module > 0) and (i.data.count > 0) then
+	    lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state));
+	 end
       end
    else
       if ((t - lastbg) > stateTimeout) then
       	 lastbg = t;
       	 --        print("state", cycle);
       	 local i = menu.allItems[cycle];
-      	 lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state)); 
+	 if (i.data.module > 0) and (i.data.count > 0) then
+	    lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state));
+	 end
       	 cycle = cycle + 1;
       	 if (cycle > #menu.allItems) then
       	    cycle = 1;
@@ -157,9 +172,22 @@ local function select(item, menu)
    if (not item) then
       return;
    end
-   --    print("sel: ", item, item.name, item.state, menu.state.activeCol);
-   item.state = menu.state.activeCol;
-   queue:push(item);
+   if (item.virt) then
+      item.state = menu.state.activeCol;
+      for i,v in ipairs(item.virt) do
+--	 print("v: " .. item.name .. " : " .. v.c .. " : " .. v.m);
+	 local vitem = { data = { count = v.c, module = v.m}, state = item.state};
+	 queue:push(vitem);
+	 local pi = lib.findItem(menu, v.m, v.c);
+	 if (pi) then
+	    pi.state = item.state;
+	 end
+      end
+   else
+      --    print("sel: ", item, item.name, item.state, menu.state.activeCol);
+      item.state = menu.state.activeCol;
+      queue:push(item);
+   end
 end
 
 local function procAndDisplay(event, pie)
