@@ -255,6 +255,18 @@ local function initMenu(menu, select, version, showShortCuts)
       end
    end
 
+   for i,vit in ipairs(menu.allItems) do
+      if (vit.virt) then
+	 for l,pi in ipairs(vit.virt) do
+	    for k,it in ipairs(menu.allItems) do
+	       if (pi.c == it.data.count) and (pi.m == it.data.module) then
+		  pi.it = it;
+	       end
+	    end
+	 end
+      end
+   end
+   
 end
 
 local function displayFooter(pie, text)

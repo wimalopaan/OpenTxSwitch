@@ -178,7 +178,8 @@ local function select(item, menu)
 --	 print("v: " .. item.name .. " : " .. v.c .. " : " .. v.m);
 	 local vitem = { data = { count = v.c, module = v.m}, state = item.state};
 	 queue:push(vitem);
-	 local pi = lib.findItem(menu, v.m, v.c);
+--	 local pi = lib.findItem(menu, v.m, v.c);
+	 local pi = v.it;
 	 if (pi) then
 	    pi.state = item.state;
 	 end
