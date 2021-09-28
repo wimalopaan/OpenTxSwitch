@@ -50,7 +50,7 @@ local menu = {
         {name = "M1F", states = gstates1, state = 1, data = {switch = nil, count = 6, module = 1}},
         {name = "M1G", states = gstates1, state = 1, data = {switch = nil, count = 7, module = 1}},
         {name = "M1H", states = gstates1, state = 1, data = {switch = nil, count = 8, module = 1}},
-        {name = "V1",  states = gstates1, state = 1, data = {switch = "sc", count = 0, module = 0}, virt = { {c = 1, m = 1}, {c = 1, m = 2} }},
+        {name = "V1",  states = gstates1, state = 1, data = {switch = "sg", count = 0, module = 0}, virt = { {c = 1, m = 1}, {c = 3, m = 2} }},
       }
     },
     { -- template for digital multiswitch RC-MultiSwitch-D @ Address(2)

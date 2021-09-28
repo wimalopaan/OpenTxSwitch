@@ -70,8 +70,12 @@ local lastRemote = 0;
 
 local lastWidgetGV = 0;
 local function sendForeignWidget()
-   if not (model.getGlobalVariable(gVar + 2, 0) == lastWidgetGV) then
-   end   
+   local fv = model.getGlobalVariable(gVar + 2, 0);
+   if (fv == lastWidgetGV) then
+      return;
+   end
+   lastWidgetGV = fv;
+   print("fv: " .. fv);
 end
 
 local function sendRemote()
@@ -87,19 +91,30 @@ local function sendRemote()
    lastRemote = r;
    
    local st = bit32.extract(r, 0, 3) + 1;
-   local it = bit32.extract(r, 3, 3) + 1;
+   local co = bit32.extract(r, 3, 3) + 1;
    local mo = bit32.extract(r, 6, 3) + 1;
 
-   local d = {state = st, data = {count = it, module = mo}};   
-   queue:push(d);
+   local it = {state = st, data = {count = co, module = mo}};   
+   queue:push(it);
 
---   rdbg = st + 10 * it + 100 * mo;
+--   rdbg = st + 10 * co + 100 * mo;
 
-   for i, item in ipairs(menu.allItems) do
-      if ((item.data.count == it) and (item.data.module == mo)) then
-	 item.state = st;
-      end
+   local menu_item = lib.findItem(menu, mo, co);
+   if (menu_item) then
+      item.state = st;
    end   
+end
+
+local function processVirtuals(item)
+   for i,v in ipairs(item.virt) do
+      --	 print("v: " .. item.name .. " : " .. v.c .. " : " .. v.m);
+      local vitem = { data = { count = v.c, module = v.m}, state = item.state};
+      queue:push(vitem);
+      local pi = v.it;
+      if (pi) then
+	 pi.state = item.state;
+      end
+   end
 end
 
 local function sendShortCuts() 
@@ -108,20 +123,25 @@ local function sendShortCuts()
       if not (s.last == ns) then
 	 s.item.state = ns;
 	 s.last = ns;
-	 queue:push(s.item);
+	 if (s.item.virt) then
+	    processVirtuals(s.item);
+	 else
+	    queue:push(s.item);
+	 end
       end
    end
    for name,l in pairs(menu.overlays) do
-      --    print(name);
       local item = l.pagelist[menu.state.activePage];
       if (item) then
-	 --      print(item.name);
 	 local ns = lib.switchState(name);
 	 if not (l.last == ns) then
 	    item.state = ns;
 	    l.last = ns;
-	    queue:push(item);
-	    --        print(item.name);
+	    if (item.virt) then
+	       processVirtuals(item);
+	    else
+	       queue:push(item);
+	    end
 	 end
       end
    end
@@ -135,7 +155,9 @@ local function backgroundLocal()
    if (model.getGlobalVariable(gVar + 1, 0) > 0) then
       return;
    end
+   sendRemote();
    sendShortCuts();
+   sendForeignWidget();   
    local t = getTime();
    if (queue:size() > 0) then
       --      print("q > 0");
@@ -165,28 +187,16 @@ end
 
 local function backgroundFull()
    backgroundLocal();
-   sendRemote();
 end
 
 local function select(item, menu)
    if (not item) then
       return;
    end
+   item.state = menu.state.activeCol;
    if (item.virt) then
-      item.state = menu.state.activeCol;
-      for i,v in ipairs(item.virt) do
---	 print("v: " .. item.name .. " : " .. v.c .. " : " .. v.m);
-	 local vitem = { data = { count = v.c, module = v.m}, state = item.state};
-	 queue:push(vitem);
---	 local pi = lib.findItem(menu, v.m, v.c);
-	 local pi = v.it;
-	 if (pi) then
-	    pi.state = item.state;
-	 end
-      end
+      processVirtuals(item);
    else
-      --    print("sel: ", item, item.name, item.state, menu.state.activeCol);
-      item.state = menu.state.activeCol;
       queue:push(item);
    end
 end
@@ -204,7 +214,6 @@ local function run(event, pie, touch)
    end
    lib.readSpeedDials(menu);
    lib.processEvents(menu, event, pie);
---   procAndDisplay(event, pie);
    lib.processTouch(menu, event, touch);
 end
 
@@ -257,8 +266,8 @@ local options = {
    { "Previous", SOURCE, 9},
    { "Select",   SOURCE, 10},
    { "Up",       SOURCE, 32},
-   { "Down",     SOURCE, 32}
---   { "Name", STRING, "swstd"}  -- bug in OpenTX?
+   { "Down",     SOURCE, 32},
+--   { "Name", STRING, "swstd"}  -- only 4 chars in 32bit int
 }
 
 local function create(zone, options)
