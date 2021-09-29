@@ -12,13 +12,14 @@
 -- all further principals of tranferring state and other information.
 
 local options = {
-  { "Name", STRING},
-  { "GVar", VALUE, 7, 0, 8},
+  { "Name", STRING}, -- display name
+  { "GVar", VALUE, 7, 0, 8}, -- gvar (counting from 0)
   { "Address", VALUE, 1, 1, 8},
   { "Function", VALUE, 1, 1, 8},
+  { "State", SOURCE, 8}, -- telemetry state variable
 };
 
-local gvalue = 0;
+local gvalue = 1; -- state 1 := off
 
 local function isDigit(v)
    return (v >= string.byte("0")) and (v <= string.byte("9"));
@@ -126,12 +127,9 @@ local function refresh(widget, event, touch)
    local leftBtn = makeButton(f2, border);
    local rightBtn = makeButton(f4, border);
    local stopBtn = makeButton(f7, border);
-
-   
+  
    lcd.drawFilledRectangle(holdBtn.x, holdBtn.y, holdBtn.w, holdBtn.h, GREEN);
-
    lcd.drawFilledCircle(stopBtn.x + stopBtn.w/2, stopBtn.y + stopBtn.h/2, stopBtn.h/2 - border, RED);
-
    lcd.drawFilledTriangle(leftBtn.x + border, leftBtn.y + leftBtn.h/2,
 			   leftBtn.x + leftBtn.w - border, leftBtn.y + border,
 			   leftBtn.x + leftBtn.w - border, leftBtn.y + leftBtn.h - border, ORANGE);
@@ -141,7 +139,6 @@ local function refresh(widget, event, touch)
 
    lcd.drawFilledRectangle(f1.x + border, f1.y + border, f1.w - (2 * border), f1.h - (2 * border), YELLOW);
    lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), YELLOW);
-
    lcd.drawText(f6.x + border, f6.y + f6.h / 2 - 16, optionString(widget.options.Name));
 
    buttonText(holdBtn, "Hold");
@@ -152,28 +149,30 @@ local function refresh(widget, event, touch)
    buttonBorder(holdBtn);
    buttonBorder(leftBtn);
    buttonBorder(rightBtn);
-   
 
    if (event == EVT_TOUCH_TAP) then
       if (covers(touch, holdBtn)) then
-	 print("h: ");
-	 gvalue = -1024;
+	 gvalue = 1;
+	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 --print(gvalue);
       elseif (covers(touch, leftBtn)) then
-	 print("l: ");
-	 gvalue = -1022;
+	 gvalue = 2;
+	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 --print(gvalue);
       elseif (covers(touch, rightBtn)) then
-	 print("r: ");
-	 gvalue = -1020;
+	 gvalue = 3;
+	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 --print(gvalue);
       elseif (covers(touch, stopBtn)) then
-	 print("s: ");
-	 gvalue = -1018;
+	 gvalue = 4;
+	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 --print(gvalue);
       end
-   end
-   
+   end   
    model.setGlobalVariable(widget.options.GVar, getFlightMode(), gvalue);
 end
 
-return { name="WM TWNS",
+return { name="WM Win",
 	 options = options,
 	 create = create,
 	 update = update,

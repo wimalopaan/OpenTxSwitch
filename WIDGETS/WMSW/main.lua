@@ -59,6 +59,8 @@ local gVar = 5; -- fallback for digital switches
 
 local stateTimeout = 10;  --fallback
 
+local exportValues = {0, -50, 50, 100};
+
 ----- nothing to setup below this line
 
 local queue = {};
@@ -75,7 +77,20 @@ local function sendForeignWidget()
       return;
    end
    lastWidgetGV = fv;
-   print("fv: " .. fv);
+
+   local st = fv % 10;
+   fv = math.floor(fv / 10);
+   local co = fv % 10
+   fv = math.floor(fv / 10);
+   local mo = fv % 10;;
+
+--   print("it: ", mo, co, st);
+   
+   local menu_item = lib.findItem(menu, mo, co);
+   if (menu_item) then
+      menu_item.state = st;
+      queue:push(menu_item);
+   end   
 end
 
 local function sendRemote()
@@ -94,14 +109,10 @@ local function sendRemote()
    local co = bit32.extract(r, 3, 3) + 1;
    local mo = bit32.extract(r, 6, 3) + 1;
 
-   local it = {state = st, data = {count = co, module = mo}};   
-   queue:push(it);
-
---   rdbg = st + 10 * co + 100 * mo;
-
    local menu_item = lib.findItem(menu, mo, co);
    if (menu_item) then
-      item.state = st;
+      menu_item.state = st;
+      queue:push(menu_item);
    end   
 end
 
@@ -167,6 +178,9 @@ local function backgroundLocal()
 	 local i = queue:pop();
 	 if (i.data.module > 0) and (i.data.count > 0) then
 	    lib.sendValue(gVar, encode(i.data.module, i.data.count, i.state));
+	 end
+	 if (i.data.export) then
+	    model.setGlobalVariable(i.data.export, 0, exportValues[i.state]);
 	 end
       end
    else
