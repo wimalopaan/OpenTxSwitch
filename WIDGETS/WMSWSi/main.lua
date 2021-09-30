@@ -167,6 +167,8 @@ local function refresh(widget, event, touch)
       buttonBorderState(leftBtn);
    elseif (state == 43) then
       lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Stalled");
+      lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), BLINK + RED);
+      lcd.drawFilledRectangle(f1.x + border, f1.y + border, f1.w - (2 * border), f1.h - (2 * border), BLINK + RED);
    elseif (state == 44) then
       lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Right End");
       lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), RED);
@@ -182,6 +184,8 @@ local function refresh(widget, event, touch)
       lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Init");
    elseif (state >= 20) and (state < 40) then
       lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Calib");
+   else 
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Invalid");
    end
    
    if (event == EVT_TOUCH_TAP) then
