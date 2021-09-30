@@ -88,6 +88,10 @@ local function buttonBorder(button)
       lcd.drawRectangle(button.x, button.y, button.w, button.h, DOTTED + LIGHTGREY);
 end
 
+local function buttonBorderState(button)
+      lcd.drawRectangle(button.x, button.y, button.w, button.h, RED, 4);
+end
+
 local function refresh(widget, event, touch)
    if (event) then -- fullscreen
       widget.canvas.x = 0;
@@ -150,6 +154,36 @@ local function refresh(widget, event, touch)
    buttonBorder(leftBtn);
    buttonBorder(rightBtn);
 
+   local state = getValue(widget.options.State);
+
+   if (state == 40) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Hold");
+      buttonBorderState(holdBtn);
+   elseif (state == 41) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Right");
+      buttonBorderState(rightBtn);
+   elseif (state == 42) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Left");
+      buttonBorderState(leftBtn);
+   elseif (state == 43) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Stalled");
+   elseif (state == 44) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Right End");
+      lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), RED);
+   elseif (state == 45) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Left End");
+      lcd.drawFilledRectangle(f1.x + border, f1.y + border, f1.w - (2 * border), f1.h - (2 * border), RED);
+   elseif (state == 46) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "FREE");
+      lcd.drawRectangle(f7.x + border, f7.y + border, f7.w - (2 * border), f7.h - (2 * border), ORANGE, 4);
+   elseif (state == 50) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Error");
+   elseif (state >= 10) and (state < 20) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Init");
+   elseif (state >= 20) and (state < 40) then
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Calib");
+   end
+   
    if (event == EVT_TOUCH_TAP) then
       if (covers(touch, holdBtn)) then
 	 gvalue = 1;
