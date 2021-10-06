@@ -270,15 +270,15 @@ local function initMenu(menu, select, version, showShortCuts)
 end
 
 local function displayFooter(pie, text)
-   lcd.drawText(pie.win.x, pie.win.y + pie.win.h - pie.win.fh, text, SMLSIZE);
+   lcd.drawText(pie.win.x, pie.win.y + pie.win.h - pie.win.fh, text, SMLSIZE + COLOR_THEME_PRIMARY3);
 end
 
 local function displayHeader(pie, text)
-   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y, text, SMLSIZE);
+   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y, text, SMLSIZE + COLOR_THEME_PRIMARY3);
 end
 
 local function displayInfo(pie, text)
-   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.fh, text, SMLSIZE);
+   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.fh, text, SMLSIZE + COLOR_THEME_PRIMARY3);
 end
 
 local function displayMenu(menu, event, pie, config)
@@ -287,7 +287,7 @@ local function displayMenu(menu, event, pie, config)
       lcd.clear()
       lcd.drawScreenTitle(menu.titlev, menu.state.activePage.number, #menu.pages);
    else  
-      lcd.drawText(pie.win.x, pie.win.y, menu.titlev, MIDSIZE);
+      lcd.drawText(pie.win.x, pie.win.y, menu.titlev, MIDSIZE + COLOR_THEME_PRIMARY3);
       displayHeader(pie, menu.state.activePage.desc);
    end
 
@@ -310,7 +310,7 @@ local function displayMenu(menu, event, pie, config)
       local x = pie.win.x;
       local y = pie.win.y + pie.win.y_offset + (row - 1) * pie.win.fh;
       local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
-      lcd.drawText(x, y, opt.name, attr);
+      lcd.drawText(x, y, opt.name, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY1);
       local fw = pie.win.w / (#opt.states + 1);
       opt.rects = {};
       for col, st in ipairs(opt.states) do
@@ -323,7 +323,7 @@ local function displayMenu(menu, event, pie, config)
 	       attr = SMLSIZE + BLINK + INVERS;
 	    end
 	 end
-	 lcd.drawText(x, y, st, attr);
+	 lcd.drawText(x, y, st, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY1);
 	 rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
 	 opt.rects[col] = rect;
 	 if (event) then

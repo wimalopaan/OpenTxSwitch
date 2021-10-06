@@ -14,9 +14,9 @@
 local options = {
   { "Name", STRING}, -- display name
   { "GVar", VALUE, 7, 0, 8}, -- gvar (counting from 0)
-  { "Address", VALUE, 1, 1, 8},
-  { "Function", VALUE, 1, 1, 8},
-  { "State", SOURCE, 8}, -- telemetry state variable
+  { "Adresse", VALUE, 1, 1, 8},
+  { "Funktion", VALUE, 1, 1, 8},
+  { "Zustand", SOURCE, 8}, -- telemetry state variable
 };
 
 local gvalue = 1; -- state 1 := off
@@ -145,65 +145,65 @@ local function refresh(widget, event, touch)
    lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), YELLOW);
    lcd.drawText(f6.x + border, f6.y + f6.h / 2 - 16, optionString(widget.options.Name));
 
-   buttonText(holdBtn, "Hold");
-   buttonText(leftBtn, "Left");
-   buttonText(rightBtn, "Right");
-   buttonText(stopBtn, "FREE");
+   buttonText(holdBtn, "Halt");
+   buttonText(leftBtn, "Links");
+   buttonText(rightBtn, "Rechts");
+   buttonText(stopBtn, "Frei");
 
    buttonBorder(holdBtn);
    buttonBorder(leftBtn);
    buttonBorder(rightBtn);
 
-   local state = getValue(widget.options.State);
+   local state = getValue(widget.options.Zustand);
 
    if (state == 40) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Hold");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Halt");
       buttonBorderState(holdBtn);
    elseif (state == 41) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Right");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Rechts");
       buttonBorderState(rightBtn);
    elseif (state == 42) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Left");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Links");
       buttonBorderState(leftBtn);
    elseif (state == 43) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Stalled");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Blockiert");
       lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), BLINK + RED);
       lcd.drawFilledRectangle(f1.x + border, f1.y + border, f1.w - (2 * border), f1.h - (2 * border), BLINK + RED);
    elseif (state == 44) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Right End");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Ende rechts");
       lcd.drawFilledRectangle(f5.x + border, f5.y + border, f5.w - (2 * border), f5.h - (2 * border), RED);
    elseif (state == 45) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Left End");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Ende links");
       lcd.drawFilledRectangle(f1.x + border, f1.y + border, f1.w - (2 * border), f1.h - (2 * border), RED);
    elseif (state == 46) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "FREE");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Frei");
       lcd.drawRectangle(f7.x + border, f7.y + border, f7.w - (2 * border), f7.h - (2 * border), ORANGE, 4);
    elseif (state == 50) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Error");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Fehler");
    elseif (state >= 10) and (state < 20) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Init");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Start");
    elseif (state >= 20) and (state < 40) then
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Calib");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Kalibrierung");
    else 
-      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Invalid");
+      lcd.drawText(f6.x + border, f6.y + f6.h - 16, "Ungueltig");
    end
    
    if (event == EVT_TOUCH_TAP) then
       if (covers(touch, holdBtn)) then
 	 gvalue = 1;
-	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 gvalue = gvalue + 10 * widget.options.Funktion + 100 * widget.options.Adresse;
 	 --print(gvalue);
       elseif (covers(touch, leftBtn)) then
 	 gvalue = 2;
-	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 gvalue = gvalue + 10 * widget.options.Funktion + 100 * widget.options.Adresse;
 	 --print(gvalue);
       elseif (covers(touch, rightBtn)) then
 	 gvalue = 3;
-	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 gvalue = gvalue + 10 * widget.options.Funktion + 100 * widget.options.Adresse;
 	 --print(gvalue);
       elseif (covers(touch, stopBtn)) then
 	 gvalue = 4;
-	 gvalue = gvalue + 10 * widget.options.Function + 100 * widget.options.Address;
+	 gvalue = gvalue + 10 * widget.options.Funktion + 100 * widget.options.Adresse;
 	 --print(gvalue);
       end
    end   
