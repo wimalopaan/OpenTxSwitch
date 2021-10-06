@@ -310,7 +310,7 @@ local function displayMenu(menu, event, pie, config)
       local x = pie.win.x;
       local y = pie.win.y + pie.win.y_offset + (row - 1) * pie.win.fh;
       local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
-      lcd.drawText(x, y, opt.name, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY1);
+      lcd.drawText(x, y, opt.name, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
       local fw = pie.win.w / (#opt.states + 1);
       opt.rects = {};
       for col, st in ipairs(opt.states) do
@@ -323,7 +323,7 @@ local function displayMenu(menu, event, pie, config)
 	       attr = SMLSIZE + BLINK + INVERS;
 	    end
 	 end
-	 lcd.drawText(x, y, st, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY1);
+	 lcd.drawText(x, y, st, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
 	 rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
 	 opt.rects[col] = rect;
 	 if (event) then
