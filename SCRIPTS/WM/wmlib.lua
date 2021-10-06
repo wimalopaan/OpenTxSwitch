@@ -309,21 +309,41 @@ local function displayMenu(menu, event, pie, config)
    for row, opt in ipairs(p.items) do
       local x = pie.win.x;
       local y = pie.win.y + pie.win.y_offset + (row - 1) * pie.win.fh;
-      local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
-      lcd.drawText(x, y, opt.name, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
+
+--      local attr = (row == menu.state.activeRow) and (INVERS + SMLSIZE) or SMLSIZE;
+--      lcd.drawText(x, y, opt.name, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
+
+      if (row == menu.state.activeRow) then
+	 lcd.drawText(x, y, opt.name, SMLSIZE + INVERS + COLOR_THEME_SECONDARY2, COLOR_THEME_PRIMARY2);
+      else
+	 lcd.drawText(x, y, opt.name, SMLSIZE + COLOR_THEME_PRIMARY1);
+      end
+      
       local fw = pie.win.w / (#opt.states + 1);
       opt.rects = {};
       for col, st in ipairs(opt.states) do
 	 x = x + fw;
-	 attr = SMLSIZE;
+	 
+--	 attr = SMLSIZE;
+--	 if (col == opt.state) then
+--	    attr = attr + INVERS;
+--	 else 
+--	    if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
+--	       attr = SMLSIZE + BLINK + INVERS;
+--	    end
+--	 end
+--	 lcd.drawText(x, y, st, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
+
 	 if (col == opt.state) then
-	    attr = attr + INVERS;
+	    lcd.drawText(x, y, st, SMLSIZE + INVERS + COLOR_THEME_SECONDARY2, COLOR_THEME_PRIMARY2);
 	 else 
-	    if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
-	       attr = SMLSIZE + BLINK + INVERS;
+	    if (menu.state.activeCol == col) and (row == menu.state.activeRow) then
+	       lcd.drawText(x, y, st, SMLSIZE + INVERS + BLINK + COLOR_THEME_SECONDARY2, COLOR_THEME_PRIMARY2);
+	    else
+	       lcd.drawText(x, y, st, COLOR_THEME_PRIMARY1);
 	    end
 	 end
-	 lcd.drawText(x, y, st, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
+
 	 rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
 	 opt.rects[col] = rect;
 	 if (event) then
