@@ -28,11 +28,14 @@ pie.win.w = LCD_W;
 pie.win.h = LCD_H;
 pie.win.fh = 8;
 pie.win.y_offset = 8;
+pie.win.y_poffset = 0;
 
 local widget = nil;
 
 local function run_telemetry(event)
-   widget.refresh(pie, event);
+   widget.stopOther();
+--   widget.refresh(pie, event);
+   widget.run(event, pie);
 end
 
 local function init_telemetry()

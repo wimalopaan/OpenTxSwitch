@@ -237,9 +237,13 @@ local function backgroundFull()
    backgroundLocal();
 end
 
-local function refresh(pie, event, touch)
+local function stopOther()
    lastVisible = getTime();
    model.setGlobalVariable(gVar + 1, 0, 1);
+end
+
+local function refresh(pie, event, touch)
+   stopOther();
    if (event) then -- fullscreen
       pie.win.x = 0;
       pie.win.y = 0;
@@ -256,4 +260,4 @@ local function refresh(pie, event, touch)
    run(event, pie, touch);
 end
 
-return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=backgroundFull, backgroundLocal=backgroundLocal, init=init, run=run}
+return { name="WMSwConf", options=options, create=create, update=update, refresh=refresh, background=backgroundFull, backgroundLocal=backgroundLocal, init=init, run=run, stopOther=stopOther}

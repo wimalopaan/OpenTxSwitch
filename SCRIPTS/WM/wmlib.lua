@@ -11,6 +11,11 @@
 -- Please note that the above license also covers the transfer protocol used and the encoding scheme and 
 -- all further principals of tranferring state and other information.
 
+local ctp1 = 0;
+local ctp2 = 0;
+local ctp3 = 0;
+local cts2 = 0;
+
 local Class = {};
 
 function Class.new(prototype)
@@ -157,6 +162,12 @@ local function findSwitch(menu, name)
 end
 
 local function initMenu(menu, select, version, showShortCuts)
+   if (COLOR_THEME_PRIMARY1) then
+      ctp1 = COLOR_THEME_PRIMARY1;
+      ctp2 = COLOR_THEME_PRIMARY2;
+      ctp3 = COLOR_THEME_PRIMARY3;
+      cts2 = COLOR_THEME_SECONDARY2;
+   end
    if not (menu.titlev) then
       if (version) then
 	 menu.titlev = menu.title .. " " .. version;
@@ -270,15 +281,15 @@ local function initMenu(menu, select, version, showShortCuts)
 end
 
 local function displayFooter(pie, text)
-   lcd.drawText(pie.win.x, pie.win.y + pie.win.h - pie.win.fh, text, SMLSIZE + COLOR_THEME_PRIMARY3);
+   lcd.drawText(pie.win.x, pie.win.y + pie.win.h - pie.win.fh, text, SMLSIZE + ctp3);
 end
 
 local function displayHeader(pie, text)
-   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y, text, SMLSIZE + COLOR_THEME_PRIMARY3);
+   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y, text, SMLSIZE + ctp3);
 end
 
 local function displayInfo(pie, text)
-   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.fh, text, SMLSIZE + COLOR_THEME_PRIMARY3);
+   lcd.drawText(pie.win.x + pie.win.w - 60, pie.win.y + pie.win.fh, text, SMLSIZE + ctp3);
 end
 
 local function displayMenu(menu, event, pie, config)
@@ -287,7 +298,7 @@ local function displayMenu(menu, event, pie, config)
       lcd.clear()
       lcd.drawScreenTitle(menu.titlev, menu.state.activePage.number, #menu.pages);
    else  
-      lcd.drawText(pie.win.x, pie.win.y, menu.titlev, MIDSIZE + COLOR_THEME_PRIMARY3);
+      lcd.drawText(pie.win.x, pie.win.y, menu.titlev, MIDSIZE + ctp3);
       displayHeader(pie, menu.state.activePage.desc);
    end
 
@@ -314,9 +325,9 @@ local function displayMenu(menu, event, pie, config)
 --      lcd.drawText(x, y, opt.name, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
 
       if (row == menu.state.activeRow) then
-	 lcd.drawText(x, y, opt.name, SMLSIZE + INVERS + COLOR_THEME_SECONDARY2, COLOR_THEME_PRIMARY2);
+	 lcd.drawText(x, y, opt.name, SMLSIZE + INVERS + cts2, ctp2);
       else
-	 lcd.drawText(x, y, opt.name, SMLSIZE + COLOR_THEME_PRIMARY1);
+	 lcd.drawText(x, y, opt.name, SMLSIZE + ctp1);
       end
       
       local fw = pie.win.w / (#opt.states + 1);
@@ -335,22 +346,24 @@ local function displayMenu(menu, event, pie, config)
 --	 lcd.drawText(x, y, st, attr + COLOR_THEME_PRIMARY1, COLOR_THEME_SECONDARY3);
 
 	 if (col == opt.state) then
-	    lcd.drawText(x, y, st, SMLSIZE + INVERS + COLOR_THEME_SECONDARY2, COLOR_THEME_PRIMARY2);
+	    lcd.drawText(x, y, st, SMLSIZE + INVERS + cts2, ctp2);
 	 else 
 	    if (menu.state.activeCol == col) and (row == menu.state.activeRow) then
-	       lcd.drawText(x, y, st, SMLSIZE + INVERS + BLINK + COLOR_THEME_SECONDARY2, COLOR_THEME_PRIMARY2);
+	       lcd.drawText(x, y, st, SMLSIZE + INVERS + BLINK + cts2, ctp2);
 	    else
 	       lcd.drawText(x, y, st, COLOR_THEME_PRIMARY1);
 	    end
 	 end
 
-	 rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
-	 opt.rects[col] = rect;
-	 if (event) then
-	    if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
-	       lcd.drawRectangle(x - 2, y - 2, fw - 4, pie.win.fh - 4, ORANGE);
-	    else
-	       lcd.drawRectangle(x - 2, y - 2, fw - 4, pie.win.fh - 4, GREY);
+	 if (LCD_W > 212) then
+	    rect = {xmin = x, ymin = y, xmax = x + fw, ymax = y + pie.win.fh};
+	    opt.rects[col] = rect;
+	    if (event) then
+	       if (menu.state.activeCol == col) and (row == menu.state.activeRow)  then
+		  lcd.drawRectangle(x - 2, y - 2, fw - 4, pie.win.fh - 4, ORANGE);
+	       else
+		  lcd.drawRectangle(x - 2, y - 2, fw - 4, pie.win.fh - 4, GREY);
+	       end
 	    end
 	 end
       end
