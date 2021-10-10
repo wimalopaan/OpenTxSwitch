@@ -477,10 +477,10 @@ local function processEvents(menu, event, pie)
       end
       return 1;
    elseif (event == 100) or (event == EVT_VIRTUAL_NEXT) then
-      nextRow(menu);
+      nextCol(menu);
       return 1;
    elseif (event == 101) or (event == EVT_VIRTUAL_PREV) then
-      prevRow(menu);
+      prevCol(menu);
       return 1;
    elseif (event == EVT_VIRTUAL_ENTER) then
       if (menu.state.activeRow > 0) then
