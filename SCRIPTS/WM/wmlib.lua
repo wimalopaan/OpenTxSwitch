@@ -351,7 +351,7 @@ local function displayMenu(menu, event, pie, config)
 	    if (menu.state.activeCol == col) and (row == menu.state.activeRow) then
 	       lcd.drawText(x, y, st, SMLSIZE + INVERS + BLINK + cts2, ctp2);
 	    else
-	       lcd.drawText(x, y, st, COLOR_THEME_PRIMARY1);
+	       lcd.drawText(x, y, st, ctp1);
 	    end
 	 end
 
